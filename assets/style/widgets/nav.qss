@@ -1,0 +1,49 @@
+QPushButton#navBtn {
+    background-color: {{nav_bg}};
+    border: none;
+    border-radius: 8px;
+    color: {{nav_text}};
+    font: 13px 'Microsoft YaHei UI';
+    padding: 12px 16px;
+    text-align: left;
+    min-width: 120px;
+}
+
+QPushButton#navBtn:hover {
+    background-color: {{nav_bg_hover}};
+}
+
+QPushButton#navBtn:pressed {
+    background-color: {{nav_bg_pressed}};
+}
+
+QPushButton#navBtn:checked {
+    background-color: {{nav_bg_checked}};
+    color: {{nav_text_checked}};
+    font-weight: bold;
+}
+
+QPushButton#navBtn:focus {
+    outline: none;
+    border: none;
+}
+
+#sidebar {
+    background: {{bg_panel}};
+    border-right: 1px solid {{border_subtle}};
+    border-radius: 0;
+}
+
+#appIcon {
+    background: transparent;
+}
+
+#appTitle {
+    color: {{text_title}};
+    font: bold 16px 'Microsoft YaHei UI';
+}
+
+#appSubtitle {
+    color: {{text_muted}};
+    font: 11px 'Microsoft YaHei UI';
+}

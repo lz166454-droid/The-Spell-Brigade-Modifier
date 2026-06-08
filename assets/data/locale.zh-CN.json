@@ -1,0 +1,1000 @@
+{
+  "source": "E:\\STEAM\\steamapps\\common\\The Spell Brigade",
+  "locale": "zh-CN",
+  "stats": {
+    "string_keys_en": 1731,
+    "string_keys_zh": 1729,
+    "characters_matched": 15,
+    "characters_total": 15,
+    "achievements_matched": 104,
+    "achievements_total": 149
+  },
+  "characters": {
+    "0": {
+      "name": "雷金纳德",
+      "character_class": "Wizard",
+      "loc_key": "Character_Reginald",
+      "class_loc_key": null
+    },
+    "1": {
+      "name": "月亮法师",
+      "character_class": "Lunar Wizard",
+      "loc_key": "Character_MoonMage",
+      "class_loc_key": null
+    },
+    "2": {
+      "name": "太阳法师",
+      "character_class": "Solar Wizard",
+      "loc_key": "Character_SunMage",
+      "class_loc_key": null
+    },
+    "3": {
+      "name": "卡文",
+      "character_class": "Key Wizard",
+      "loc_key": "Character_KeyMage",
+      "class_loc_key": null
+    },
+    "4": {
+      "name": "路德维希",
+      "character_class": "Swordsman",
+      "loc_key": "Character_Ludwig",
+      "class_loc_key": null
+    },
+    "5": {
+      "name": "坎帕内利",
+      "character_class": "Phantom Wizard",
+      "loc_key": "Character_Campanelli",
+      "class_loc_key": null
+    },
+    "6": {
+      "name": "哈蒂",
+      "character_class": "Hat Wizard",
+      "loc_key": "Character_Hatty",
+      "class_loc_key": null
+    },
+    "7": {
+      "name": "巫师王",
+      "character_class": "King",
+      "loc_key": "Character_WizardKing",
+      "class_loc_key": null
+    },
+    "8": {
+      "name": "星星法师",
+      "character_class": "Star Wizard",
+      "loc_key": "Character_StarMage",
+      "class_loc_key": null
+    },
+    "9": {
+      "name": "阿尔德里克",
+      "character_class": "Blacksmith",
+      "loc_key": "Character_Smithy",
+      "class_loc_key": null
+    },
+    "10": {
+      "name": "玛吉",
+      "character_class": "Bird Wizard",
+      "loc_key": "Character_BirdMage",
+      "class_loc_key": null
+    },
+    "11": {
+      "name": "布莱奥尼",
+      "character_class": "Plant Wizard",
+      "loc_key": "Character_PlantMage",
+      "class_loc_key": null
+    },
+    "12": {
+      "name": "皮普威克",
+      "character_class": "Flute Wizard",
+      "loc_key": "Character_FluteMage",
+      "class_loc_key": null
+    },
+    "13": {
+      "name": "巴尔萨扎",
+      "character_class": "Vampire Wizard",
+      "loc_key": "Character_VampireMage",
+      "class_loc_key": null
+    },
+    "14": {
+      "name": "奈莉",
+      "character_class": "Bell Wizard",
+      "loc_key": "Character_BellMage",
+      "class_loc_key": null
+    }
+  },
+  "achievements": {
+    "0": {
+      "name": "猎头者",
+      "description": "Challenge 0",
+      "loc_key": "Title_DefeatHydra",
+      "desc_loc_key": null
+    },
+    "1": {
+      "name": "鱿鱼串烤者",
+      "description": "Challenge 1",
+      "loc_key": "Title_DefeatSquid",
+      "desc_loc_key": null
+    },
+    "2": {
+      "name": "蟾蜍践踏者",
+      "description": "Challenge 2",
+      "loc_key": "Title_DefeatToad",
+      "desc_loc_key": null
+    },
+    "3": {
+      "name": "永恒之约",
+      "description": "Challenge 3",
+      "loc_key": "Modifier_EndlessMode_Name",
+      "desc_loc_key": "Modifier_EndlessMode"
+    },
+    "4": {
+      "name": "和谐契约",
+      "description": "Challenge 4",
+      "loc_key": "Modifier_PeacefulMode_Name",
+      "desc_loc_key": "Modifier_PeacefulMode"
+    },
+    "5": {
+      "name": "暗之代理人",
+      "description": "Target: 7734",
+      "loc_key": "Title_CorruptEnemies",
+      "desc_loc_key": null
+    },
+    "6": {
+      "name": "冰",
+      "description": "Target: 2727272",
+      "loc_key": "Element_Ice",
+      "desc_loc_key": null
+    },
+    "7": {
+      "name": "电",
+      "description": "Target: 777777",
+      "loc_key": "Element_Lightning",
+      "desc_loc_key": null
+    },
+    "8": {
+      "name": "黑暗",
+      "description": "Target: 11700",
+      "loc_key": "Element_Dark",
+      "desc_loc_key": null
+    },
+    "9": {
+      "name": "酸",
+      "description": "Target: 14400",
+      "loc_key": "Element_Acid",
+      "desc_loc_key": null
+    },
+    "10": {
+      "name": "元素大师",
+      "description": "Target: 20",
+      "loc_key": "Title_AllInfusions",
+      "desc_loc_key": null
+    },
+    "11": {
+      "name": "双重元素融合",
+      "description": "Target: 5",
+      "loc_key": "Reward_Name_DoubleInfusion",
+      "desc_loc_key": null
+    },
+    "12": {
+      "name": "魔法",
+      "description": "Challenge 12",
+      "loc_key": "Reward_Name_UpgradeTier_1",
+      "desc_loc_key": null
+    },
+    "13": {
+      "name": "终极形态",
+      "description": "Challenge 13",
+      "loc_key": "Title_AllUpgrades",
+      "desc_loc_key": null
+    },
+    "14": {
+      "name": "IV阶魔法",
+      "description": "Target: 5",
+      "loc_key": "Reward_Name_UpgradeTier_4",
+      "desc_loc_key": null
+    },
+    "15": {
+      "name": "V阶魔法",
+      "description": "Target: 8",
+      "loc_key": "Reward_Name_UpgradeTier_5",
+      "desc_loc_key": null
+    },
+    "16": {
+      "name": "II阶魔法",
+      "description": "Target: 7",
+      "loc_key": "Reward_Name_UpgradeTier_2",
+      "desc_loc_key": null
+    },
+    "17": {
+      "name": "III阶魔法",
+      "description": "Target: 14",
+      "loc_key": "Reward_Name_UpgradeTier_3",
+      "desc_loc_key": null
+    },
+    "18": {
+      "name": "旅团精英",
+      "description": "Target: 10",
+      "loc_key": "Title_AllObjectives",
+      "desc_loc_key": null
+    },
+    "19": {
+      "name": "献祭目标",
+      "description": "Target: 5",
+      "loc_key": "Reward_Name_Objective_Sacrifice",
+      "desc_loc_key": null
+    },
+    "20": {
+      "name": "咒语核心目标",
+      "description": "Target: 12",
+      "loc_key": "Reward_Name_Objective_Push",
+      "desc_loc_key": null
+    },
+    "21": {
+      "name": "火盆目标",
+      "description": "Target: 25",
+      "loc_key": "Reward_Name_Objective_Order",
+      "desc_loc_key": null
+    },
+    "22": {
+      "name": "魔力兽目标",
+      "description": "Target: 40",
+      "loc_key": "Reward_Name_Objective_Herd",
+      "desc_loc_key": null
+    },
+    "23": {
+      "name": "原版奈莉",
+      "description": "Target: 2080",
+      "loc_key": "Skin_BellMage_0",
+      "desc_loc_key": null
+    },
+    "24": {
+      "name": "骨瓷奈莉",
+      "description": "Challenge 24",
+      "loc_key": "Skin_BellMage_1",
+      "desc_loc_key": null
+    },
+    "25": {
+      "name": "黑暗学徒雷金纳德",
+      "description": "Challenge 25",
+      "loc_key": "Skin_Reginald_1",
+      "desc_loc_key": null
+    },
+    "26": {
+      "name": "海星法师",
+      "description": "Target: 9001",
+      "loc_key": "Skin_StarMage_1",
+      "desc_loc_key": null
+    },
+    "27": {
+      "name": "愚心者坎帕内利",
+      "description": "Challenge 27",
+      "loc_key": "Skin_Campanelli_1",
+      "desc_loc_key": null
+    },
+    "28": {
+      "name": "智者雷金纳德",
+      "description": "Challenge 28",
+      "loc_key": "Skin_Reginald_2",
+      "desc_loc_key": null
+    },
+    "29": {
+      "name": "游荡者玛吉",
+      "description": "Target: 33",
+      "loc_key": "Skin_BirdMage_1",
+      "desc_loc_key": null
+    },
+    "30": {
+      "name": "荆棘女巫布莱奥尼",
+      "description": "Challenge 30",
+      "loc_key": "Skin_PlantMage_1",
+      "desc_loc_key": null
+    },
+    "31": {
+      "name": "原版阿尔德里克",
+      "description": "Target: 432",
+      "loc_key": "Skin_Smithy_0",
+      "desc_loc_key": null
+    },
+    "32": {
+      "name": "完美收集者",
+      "description": "Target: 38",
+      "loc_key": "Title_AllOutfits",
+      "desc_loc_key": null
+    },
+    "33": {
+      "name": "岩浆根须布莱奥尼",
+      "description": "Challenge 33",
+      "loc_key": "Skin_PlantMage_2",
+      "desc_loc_key": null
+    },
+    "34": {
+      "name": "日蚀太阳法师",
+      "description": "Challenge 34",
+      "loc_key": "Skin_SunMage_1",
+      "desc_loc_key": null
+    },
+    "35": {
+      "name": "原版月亮法师",
+      "description": "Challenge 35",
+      "loc_key": "Skin_MoonMage_0",
+      "desc_loc_key": null
+    },
+    "36": {
+      "name": "原版卡文",
+      "description": "Challenge 36",
+      "loc_key": "Skin_KeyMage_0",
+      "desc_loc_key": null
+    },
+    "37": {
+      "name": "黑桃国王",
+      "description": "Target: 1500",
+      "loc_key": "Skin_WizardKing_2",
+      "desc_loc_key": null
+    },
+    "38": {
+      "name": "战备哈蒂",
+      "description": "Target: 314159",
+      "loc_key": "Skin_Hatty_1",
+      "desc_loc_key": null
+    },
+    "39": {
+      "name": "原版太阳法师",
+      "description": "Challenge 39",
+      "loc_key": "Skin_SunMage_0",
+      "desc_loc_key": null
+    },
+    "40": {
+      "name": "恶魔卡文",
+      "description": "Challenge 40",
+      "loc_key": "Skin_KeyMage_1",
+      "desc_loc_key": null
+    },
+    "41": {
+      "name": "原版星星法师",
+      "description": "Challenge 41",
+      "loc_key": "Skin_StarMage_0",
+      "desc_loc_key": null
+    },
+    "42": {
+      "name": "星光枯萎",
+      "description": "Challenge 42",
+      "loc_key": "Skin_StarMage_2",
+      "desc_loc_key": null
+    },
+    "43": {
+      "name": "原版皮普威克",
+      "description": "Challenge 43",
+      "loc_key": "Skin_FluteMage_0",
+      "desc_loc_key": null
+    },
+    "44": {
+      "name": "驯龙师皮普威克",
+      "description": "Challenge 44",
+      "loc_key": "Skin_FluteMage_1",
+      "desc_loc_key": null
+    },
+    "45": {
+      "name": "面团大师阿尔德里克",
+      "description": "Challenge 45",
+      "loc_key": "Skin_Smithy_1",
+      "desc_loc_key": null
+    },
+    "46": {
+      "name": "林地守卫阿尔德里克",
+      "description": "Challenge 46",
+      "loc_key": "Skin_Smithy_2",
+      "desc_loc_key": null
+    },
+    "47": {
+      "name": "亡灵之王",
+      "description": "Challenge 47",
+      "loc_key": "Skin_WizardKing_1",
+      "desc_loc_key": null
+    },
+    "48": {
+      "name": "原版哈蒂",
+      "description": "Challenge 48",
+      "loc_key": "Skin_Hatty_0",
+      "desc_loc_key": null
+    },
+    "49": {
+      "name": "原版玛吉",
+      "description": "Challenge 49",
+      "loc_key": "Skin_BirdMage_0",
+      "desc_loc_key": null
+    },
+    "50": {
+      "name": "紫水晶月亮法师",
+      "description": "Challenge 50",
+      "loc_key": "Skin_MoonMage_1",
+      "desc_loc_key": null
+    },
+    "51": {
+      "name": "原版雷金纳德",
+      "description": "Challenge 51",
+      "loc_key": "Skin_Reginald_0",
+      "desc_loc_key": null
+    },
+    "52": {
+      "name": "原版路德维希",
+      "description": "Challenge 52",
+      "loc_key": "Skin_Ludwig_0",
+      "desc_loc_key": null
+    },
+    "53": {
+      "name": "虚空先知哈蒂",
+      "description": "Target: 300",
+      "loc_key": "Skin_Hatty_2",
+      "desc_loc_key": null
+    },
+    "54": {
+      "name": "原版巫师王",
+      "description": "Target: 404",
+      "loc_key": "Skin_WizardKing_0",
+      "desc_loc_key": null
+    },
+    "55": {
+      "name": "原版布莱奥尼",
+      "description": "Challenge 55",
+      "loc_key": "Skin_PlantMage_0",
+      "desc_loc_key": null
+    },
+    "56": {
+      "name": "原版坎帕内利",
+      "description": "Target: 13",
+      "loc_key": "Skin_Campanelli_0",
+      "desc_loc_key": null
+    },
+    "57": {
+      "name": "原版巴尔萨扎",
+      "description": "Target: 12",
+      "loc_key": "Skin_VampireMage_0",
+      "desc_loc_key": null
+    },
+    "58": {
+      "name": "受诅咒的路德维希",
+      "description": "Target: 1066",
+      "loc_key": "Skin_Ludwig_1",
+      "desc_loc_key": null
+    },
+    "59": {
+      "name": "超新星太阳法师",
+      "description": "Target: 90",
+      "loc_key": "Skin_SunMage_2",
+      "desc_loc_key": null
+    },
+    "60": {
+      "name": "夜班巴尔萨扎",
+      "description": "Challenge 60",
+      "loc_key": "Skin_VampireMage_1",
+      "desc_loc_key": null
+    },
+    "61": {
+      "name": "皇帝巴尔萨扎",
+      "description": "Challenge 61",
+      "loc_key": "Skin_VampireMage_2",
+      "desc_loc_key": null
+    },
+    "62": {
+      "name": "魔力枯竭",
+      "description": "Challenge 62",
+      "loc_key": "Curse_EnemiesDropLessXP_Name_0",
+      "desc_loc_key": null
+    },
+    "63": {
+      "name": "折磨",
+      "description": "Challenge 63",
+      "loc_key": "Curse_ReduceAllHealing_Name_0",
+      "desc_loc_key": null
+    },
+    "64": {
+      "name": "纯粹",
+      "description": "Challenge 64",
+      "loc_key": "Curse_NoEnchantments_Name_0",
+      "desc_loc_key": null
+    },
+    "65": {
+      "name": "苦修",
+      "description": "Challenge 65",
+      "loc_key": "Curse_TakeDamageOnLevelUp_Name_0",
+      "desc_loc_key": null
+    },
+    "66": {
+      "name": "出芽玛吉",
+      "description": "Challenge 66",
+      "loc_key": "Skin_BirdMage_Prestige",
+      "desc_loc_key": null
+    },
+    "67": {
+      "name": "炸裂坎帕内利",
+      "description": "Challenge 67",
+      "loc_key": "Skin_Campanelli_Prestige",
+      "desc_loc_key": null
+    },
+    "68": {
+      "name": "矿工奈莉",
+      "description": "Challenge 68",
+      "loc_key": "Skin_BellMage_Prestige",
+      "desc_loc_key": null
+    },
+    "69": {
+      "name": "歌鸟皮普威克",
+      "description": "Challenge 69",
+      "loc_key": "Skin_FluteMage_Prestige",
+      "desc_loc_key": null
+    },
+    "70": {
+      "name": "旋涡哈蒂",
+      "description": "Challenge 70",
+      "loc_key": "Skin_Hatty_Prestige",
+      "desc_loc_key": null
+    },
+    "71": {
+      "name": "漩缚卡文",
+      "description": "Challenge 71",
+      "loc_key": "Skin_KeyMage_Prestige",
+      "desc_loc_key": null
+    },
+    "72": {
+      "name": "绯红伯爵路德维希",
+      "description": "Challenge 72",
+      "loc_key": "Skin_Ludwig_Prestige",
+      "desc_loc_key": null
+    },
+    "73": {
+      "name": "权杖月亮法师",
+      "description": "Challenge 73",
+      "loc_key": "Skin_MoonMage_Prestige",
+      "desc_loc_key": null
+    },
+    "74": {
+      "name": "铁甲布莱奥尼",
+      "description": "Challenge 74",
+      "loc_key": "Skin_PlantMage_Prestige",
+      "desc_loc_key": null
+    },
+    "75": {
+      "name": "奈莉的学徒雷金纳德",
+      "description": "Challenge 75",
+      "loc_key": "Skin_Reginald_Prestige",
+      "desc_loc_key": null
+    },
+    "76": {
+      "name": "日冠阿尔德里克",
+      "description": "Challenge 76",
+      "loc_key": "Skin_Smithy_Prestige",
+      "desc_loc_key": null
+    },
+    "77": {
+      "name": "符文星星法师",
+      "description": "Challenge 77",
+      "loc_key": "Skin_StarMage_Prestige",
+      "desc_loc_key": null
+    },
+    "78": {
+      "name": "冥界太阳法师",
+      "description": "Challenge 78",
+      "loc_key": "Skin_SunMage_Prestige",
+      "desc_loc_key": null
+    },
+    "79": {
+      "name": "日行者巴尔萨扎",
+      "description": "Challenge 79",
+      "loc_key": "Skin_VampireMage_Prestige",
+      "desc_loc_key": null
+    },
+    "80": {
+      "name": "巫师王子",
+      "description": "Challenge 80",
+      "loc_key": "Skin_WizardKing_Prestige",
+      "desc_loc_key": null
+    },
+    "81": {
+      "name": "封咒",
+      "description": "Challenge 81",
+      "loc_key": "Curse_OneLessSpell_Name_0",
+      "desc_loc_key": null
+    },
+    "82": {
+      "name": "苦修",
+      "description": "Challenge 82",
+      "loc_key": "Curse_TakeDamageOnLevelUp_Name_0",
+      "desc_loc_key": null
+    },
+    "83": {
+      "name": "狂潮",
+      "description": "Challenge 83",
+      "loc_key": "Curse_StrongerEnemies_Name_0",
+      "desc_loc_key": null
+    },
+    "84": {
+      "name": "封咒",
+      "description": "Challenge 84",
+      "loc_key": "Curse_OneLessSpell_Name_0",
+      "desc_loc_key": null
+    },
+    "85": {
+      "name": "狂潮",
+      "description": "Challenge 85",
+      "loc_key": "Curse_StrongerEnemies_Name_0",
+      "desc_loc_key": null
+    },
+    "86": {
+      "name": "苦修",
+      "description": "Challenge 86",
+      "loc_key": "Curse_TakeDamageOnLevelUp_Name_0",
+      "desc_loc_key": null
+    },
+    "87": {
+      "name": "魔力枯竭",
+      "description": "Challenge 87",
+      "loc_key": "Curse_EnemiesDropLessXP_Name_0",
+      "desc_loc_key": null
+    },
+    "88": {
+      "name": "凡躯",
+      "description": "Challenge 88",
+      "loc_key": "Curse_OneHitMode_Name_0",
+      "desc_loc_key": null
+    },
+    "89": {
+      "name": "折磨",
+      "description": "Challenge 89",
+      "loc_key": "Curse_ReduceAllHealing_Name_0",
+      "desc_loc_key": null
+    },
+    "90": {
+      "name": "封咒",
+      "description": "Challenge 90",
+      "loc_key": "Curse_OneLessSpell_Name_0",
+      "desc_loc_key": null
+    },
+    "91": {
+      "name": "折磨",
+      "description": "Challenge 91",
+      "loc_key": "Curse_ReduceAllHealing_Name_0",
+      "desc_loc_key": null
+    },
+    "92": {
+      "name": "克己",
+      "description": "Challenge 92",
+      "loc_key": "Curse_OneLessStoreItem_Name_0",
+      "desc_loc_key": null
+    },
+    "93": {
+      "name": "狂潮",
+      "description": "Challenge 93",
+      "loc_key": "Curse_StrongerEnemies_Name_0",
+      "desc_loc_key": null
+    },
+    "94": {
+      "name": "魔力枯竭",
+      "description": "Challenge 94",
+      "loc_key": "Curse_EnemiesDropLessXP_Name_0",
+      "desc_loc_key": null
+    },
+    "95": {
+      "name": "克己",
+      "description": "Challenge 95",
+      "loc_key": "Curse_OneLessStoreItem_Name_0",
+      "desc_loc_key": null
+    },
+    "96": {
+      "name": "Crystal Frostlands",
+      "description": "Challenge 96",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "97": {
+      "name": "Scorched Abyss",
+      "description": "Challenge 97",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "98": {
+      "name": "Astral Planes",
+      "description": "Challenge 98",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "99": {
+      "name": "领域守护者",
+      "description": "Challenge 99",
+      "loc_key": "Title_CompleteWorld4",
+      "desc_loc_key": null
+    },
+    "100": {
+      "name": "Artifact 12",
+      "description": "Challenge 100",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "101": {
+      "name": "Artifact 6",
+      "description": "Challenge 101",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "102": {
+      "name": "Artifact 13",
+      "description": "Challenge 102",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "103": {
+      "name": "Artifact 14",
+      "description": "Challenge 103",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "104": {
+      "name": "Artifact 15",
+      "description": "Challenge 104",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "105": {
+      "name": "Artifact 20",
+      "description": "Challenge 105",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "106": {
+      "name": "Artifact 11",
+      "description": "Target: 50",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "107": {
+      "name": "Artifact 7",
+      "description": "Target: 433",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "108": {
+      "name": "Artifact 19",
+      "description": "Challenge 108",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "109": {
+      "name": "Artifact 9",
+      "description": "Challenge 109",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "110": {
+      "name": "Artifact Drop 2",
+      "description": "Target: 3",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "111": {
+      "name": "Artifact Drop 3",
+      "description": "Target: 8",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "112": {
+      "name": "Artifact Drop Endless",
+      "description": "Target: 12",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "113": {
+      "name": "Artifact 18",
+      "description": "Challenge 113",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "114": {
+      "name": "Artifact 17",
+      "description": "Challenge 114",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "115": {
+      "name": "Artifact 10",
+      "description": "Target: 10",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "116": {
+      "name": "Artifact 8",
+      "description": "Target: 5",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "117": {
+      "name": "Artifact 16",
+      "description": "Target: 900",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "118": {
+      "name": "Beam Spell",
+      "description": "Challenge 118",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "119": {
+      "name": "Falling Star Spell",
+      "description": "Challenge 119",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "120": {
+      "name": "Shotgun Spell",
+      "description": "Challenge 120",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "121": {
+      "name": "Proximity Spell",
+      "description": "Target: 99",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "122": {
+      "name": "Arrow Spell",
+      "description": "Challenge 122",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "123": {
+      "name": "Boomerang Spell",
+      "description": "Challenge 123",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "124": {
+      "name": "Smg Spell",
+      "description": "Challenge 124",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "125": {
+      "name": "Rifle Spell",
+      "description": "Challenge 125",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "126": {
+      "name": "Plant Spell",
+      "description": "Challenge 126",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "127": {
+      "name": "Laser Spell",
+      "description": "Challenge 127",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "128": {
+      "name": "Trail Spell",
+      "description": "Target: 850",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "129": {
+      "name": "Bell Spell",
+      "description": "Challenge 129",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "130": {
+      "name": "Slash Spell",
+      "description": "Challenge 130",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "131": {
+      "name": "Summon Spell",
+      "description": "Target: 12840",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "132": {
+      "name": "Nightmare Difficulty",
+      "description": "Target: 4",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "133": {
+      "name": "硬核玩家",
+      "description": "Target: 4",
+      "loc_key": "Title_CompleteAllWorldsNightmare",
+      "desc_loc_key": null
+    },
+    "134": {
+      "name": "Hard Difficulty",
+      "description": "Target: 4",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "135": {
+      "name": "Bird Mage",
+      "description": "Challenge 135",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "136": {
+      "name": "坎帕内利",
+      "description": "Challenge 136",
+      "loc_key": "Character_Campanelli",
+      "desc_loc_key": null
+    },
+    "137": {
+      "name": "Bell Mage",
+      "description": "Challenge 137",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "138": {
+      "name": "Flute Mage",
+      "description": "Challenge 138",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "139": {
+      "name": "Hatty",
+      "description": "Challenge 139",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "140": {
+      "name": "Key Mage",
+      "description": "Challenge 140",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "141": {
+      "name": "路德维希",
+      "description": "Challenge 141",
+      "loc_key": "Character_Ludwig",
+      "desc_loc_key": null
+    },
+    "142": {
+      "name": "月亮法师",
+      "description": "Challenge 142",
+      "loc_key": "Character_MoonMage",
+      "desc_loc_key": null
+    },
+    "143": {
+      "name": "Plant Mage",
+      "description": "Challenge 143",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "144": {
+      "name": "Smithy",
+      "description": "Challenge 144",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "145": {
+      "name": "星星法师",
+      "description": "Challenge 145",
+      "loc_key": "Character_StarMage",
+      "desc_loc_key": null
+    },
+    "146": {
+      "name": "太阳法师",
+      "description": "Challenge 146",
+      "loc_key": "Character_SunMage",
+      "desc_loc_key": null
+    },
+    "147": {
+      "name": "Vampire Mage",
+      "description": "Challenge 147",
+      "loc_key": null,
+      "desc_loc_key": null
+    },
+    "148": {
+      "name": "巫师王",
+      "description": "Challenge 148",
+      "loc_key": "Character_WizardKing",
+      "desc_loc_key": null
+    }
+  }
+}

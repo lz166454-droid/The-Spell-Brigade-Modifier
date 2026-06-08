@@ -1,0 +1,15 @@
+!requirements.txt
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+config/
+*.ico
+!assets/logo/logo.ico
+*.png
+!files/*.png
+pyrightconfig.json
+dist/

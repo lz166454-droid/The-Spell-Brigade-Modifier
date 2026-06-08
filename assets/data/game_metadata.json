@@ -1,0 +1,1007 @@
+{
+  "characters": [
+    {
+      "id": 0,
+      "name": "Reginald",
+      "character_class": "Wizard",
+      "max_level": 10
+    },
+    {
+      "id": 1,
+      "name": "Moon Mage",
+      "character_class": "Lunar Wizard",
+      "max_level": 10
+    },
+    {
+      "id": 2,
+      "name": "Sun Mage",
+      "character_class": "Solar Wizard",
+      "max_level": 10
+    },
+    {
+      "id": 3,
+      "name": "Key Mage",
+      "character_class": "Key Wizard",
+      "max_level": 10
+    },
+    {
+      "id": 4,
+      "name": "Ludwig",
+      "character_class": "Swordsman",
+      "max_level": 10
+    },
+    {
+      "id": 5,
+      "name": "Campanelli",
+      "character_class": "Phantom Wizard",
+      "max_level": 10
+    },
+    {
+      "id": 6,
+      "name": "Hatty",
+      "character_class": "Hat Wizard",
+      "max_level": 10
+    },
+    {
+      "id": 7,
+      "name": "Wizard King",
+      "character_class": "King",
+      "max_level": 10
+    },
+    {
+      "id": 8,
+      "name": "Star Mage",
+      "character_class": "Star Wizard",
+      "max_level": 10
+    },
+    {
+      "id": 9,
+      "name": "Smithy",
+      "character_class": "Blacksmith",
+      "max_level": 10
+    },
+    {
+      "id": 10,
+      "name": "Bird Mage",
+      "character_class": "Bird Wizard",
+      "max_level": 10
+    },
+    {
+      "id": 11,
+      "name": "Plant Mage",
+      "character_class": "Plant Wizard",
+      "max_level": 10
+    },
+    {
+      "id": 12,
+      "name": "Flute Mage",
+      "character_class": "Flute Wizard",
+      "max_level": 10
+    },
+    {
+      "id": 13,
+      "name": "Vampire Mage",
+      "character_class": "Vampire Wizard",
+      "max_level": 10
+    },
+    {
+      "id": 14,
+      "name": "Bell Mage",
+      "character_class": "Bell Wizard",
+      "max_level": 10
+    }
+  ],
+  "achievements": [
+    {
+      "id": 0,
+      "name": "Title: Defeat Hydra",
+      "description": "Challenge 0",
+      "category": "MICS"
+    },
+    {
+      "id": 1,
+      "name": "Title: Defeat Squid",
+      "description": "Challenge 1",
+      "category": "MICS"
+    },
+    {
+      "id": 2,
+      "name": "Title: Defeat Toad",
+      "description": "Challenge 2",
+      "category": "MICS"
+    },
+    {
+      "id": 3,
+      "name": "Endless Mode",
+      "description": "Challenge 3",
+      "category": "MICS"
+    },
+    {
+      "id": 4,
+      "name": "Peaceful Mode",
+      "description": "Challenge 4",
+      "category": "MICS"
+    },
+    {
+      "id": 5,
+      "name": "Title: Corrupt Enemies",
+      "description": "Target: 7734",
+      "category": "MICS"
+    },
+    {
+      "id": 6,
+      "name": "Ice Element",
+      "description": "Target: 2727272",
+      "category": "MICS"
+    },
+    {
+      "id": 7,
+      "name": "Lightning Element",
+      "description": "Target: 777777",
+      "category": "MICS"
+    },
+    {
+      "id": 8,
+      "name": "Dark Element",
+      "description": "Target: 11700",
+      "category": "MICS"
+    },
+    {
+      "id": 9,
+      "name": "Acid Element",
+      "description": "Target: 14400",
+      "category": "MICS"
+    },
+    {
+      "id": 10,
+      "name": "Title: All Infusions",
+      "description": "Target: 20",
+      "category": "MICS"
+    },
+    {
+      "id": 11,
+      "name": "Double Infusion",
+      "description": "Target: 5",
+      "category": "MICS"
+    },
+    {
+      "id": 12,
+      "name": "Upgrade Tier 1",
+      "description": "Challenge 12",
+      "category": "MICS"
+    },
+    {
+      "id": 13,
+      "name": "Title: All Upgrades",
+      "description": "Challenge 13",
+      "category": "MICS"
+    },
+    {
+      "id": 14,
+      "name": "Upgrade Tier 4",
+      "description": "Target: 5",
+      "category": "MICS"
+    },
+    {
+      "id": 15,
+      "name": "Upgrade Tier 5",
+      "description": "Target: 8",
+      "category": "MICS"
+    },
+    {
+      "id": 16,
+      "name": "Upgrade Tier 2",
+      "description": "Target: 7",
+      "category": "MICS"
+    },
+    {
+      "id": 17,
+      "name": "Upgrade Tier 3",
+      "description": "Target: 14",
+      "category": "MICS"
+    },
+    {
+      "id": 18,
+      "name": "Title: All Objectives",
+      "description": "Target: 10",
+      "category": "MICS"
+    },
+    {
+      "id": 19,
+      "name": "Objective: Sacrifice",
+      "description": "Target: 5",
+      "category": "MISSION"
+    },
+    {
+      "id": 20,
+      "name": "Objective: Push",
+      "description": "Target: 12",
+      "category": "MISSION"
+    },
+    {
+      "id": 21,
+      "name": "Objective: Order",
+      "description": "Target: 25",
+      "category": "MISSION"
+    },
+    {
+      "id": 22,
+      "name": "Objective: Herd",
+      "description": "Target: 40",
+      "category": "MISSION"
+    },
+    {
+      "id": 23,
+      "name": "Bell Mage Skin 1",
+      "description": "Target: 2080",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 24,
+      "name": "Bell Mage Skin 2",
+      "description": "Challenge 24",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 25,
+      "name": "Reginald Skin 2",
+      "description": "Challenge 25",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 26,
+      "name": "Star Mage Skin 2",
+      "description": "Target: 9001",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 27,
+      "name": "Campanelli Skin 2",
+      "description": "Challenge 27",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 28,
+      "name": "Reginald Skin 3",
+      "description": "Challenge 28",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 29,
+      "name": "Bird Mage Skin 2",
+      "description": "Target: 33",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 30,
+      "name": "Plant Mage Skin 2",
+      "description": "Challenge 30",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 31,
+      "name": "Smithy Skin 1",
+      "description": "Target: 432",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 32,
+      "name": "Title: All Outfits",
+      "description": "Target: 38",
+      "category": "MICS"
+    },
+    {
+      "id": 33,
+      "name": "Plant Mage Skin 3",
+      "description": "Challenge 33",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 34,
+      "name": "Sun Mage Skin 2",
+      "description": "Challenge 34",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 35,
+      "name": "Moon Mage Skin 1",
+      "description": "Challenge 35",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 36,
+      "name": "Key Mage Skin 1",
+      "description": "Challenge 36",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 37,
+      "name": "Wizard King Skin 3",
+      "description": "Target: 1500",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 38,
+      "name": "Hatty Skin 2",
+      "description": "Target: 314159",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 39,
+      "name": "Sun Mage Skin 1",
+      "description": "Challenge 39",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 40,
+      "name": "Key Mage Skin 2",
+      "description": "Challenge 40",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 41,
+      "name": "Star Mage Skin 1",
+      "description": "Challenge 41",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 42,
+      "name": "Star Mage Skin 3",
+      "description": "Challenge 42",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 43,
+      "name": "Flute Mage Skin 1",
+      "description": "Challenge 43",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 44,
+      "name": "Flute Mage Skin 2",
+      "description": "Challenge 44",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 45,
+      "name": "Smithy Skin 2",
+      "description": "Challenge 45",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 46,
+      "name": "Smithy Skin 3",
+      "description": "Challenge 46",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 47,
+      "name": "Wizard King Skin 2",
+      "description": "Challenge 47",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 48,
+      "name": "Hatty Skin 1",
+      "description": "Challenge 48",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 49,
+      "name": "Bird Mage Skin 1",
+      "description": "Challenge 49",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 50,
+      "name": "Moon Mage Skin 2",
+      "description": "Challenge 50",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 51,
+      "name": "Reginald Skin 1",
+      "description": "Challenge 51",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 52,
+      "name": "Ludwig Skin 1",
+      "description": "Challenge 52",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 53,
+      "name": "Hatty Skin 3",
+      "description": "Target: 300",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 54,
+      "name": "Wizard King Skin 1",
+      "description": "Target: 404",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 55,
+      "name": "Plant Mage Skin 1",
+      "description": "Challenge 55",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 56,
+      "name": "Campanelli Skin 1",
+      "description": "Target: 13",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 57,
+      "name": "Vampire Mage Skin 1",
+      "description": "Target: 12",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 58,
+      "name": "Ludwig Skin 2",
+      "description": "Target: 1066",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 59,
+      "name": "Sun Mage Skin 3",
+      "description": "Target: 90",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 60,
+      "name": "Vampire Mage Skin 2",
+      "description": "Challenge 60",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 61,
+      "name": "Vampire Mage Skin 3",
+      "description": "Challenge 61",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 62,
+      "name": "Curse: Enemies Drop Less XP",
+      "description": "Challenge 62",
+      "category": "MICS"
+    },
+    {
+      "id": 63,
+      "name": "Curse: Reduce All Healing",
+      "description": "Challenge 63",
+      "category": "MICS"
+    },
+    {
+      "id": 64,
+      "name": "Curse: No Enchantments",
+      "description": "Challenge 64",
+      "category": "MICS"
+    },
+    {
+      "id": 65,
+      "name": "Curse: Take Damage On Level Up",
+      "description": "Challenge 65",
+      "category": "MICS"
+    },
+    {
+      "id": 66,
+      "name": "Bird Mage Prestige",
+      "description": "Challenge 66",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 67,
+      "name": "Campanelli Prestige",
+      "description": "Challenge 67",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 68,
+      "name": "Bell Mage Prestige",
+      "description": "Challenge 68",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 69,
+      "name": "Flute Mage Prestige",
+      "description": "Challenge 69",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 70,
+      "name": "Hatty Prestige",
+      "description": "Challenge 70",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 71,
+      "name": "Key Mage Prestige",
+      "description": "Challenge 71",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 72,
+      "name": "Ludwig Prestige",
+      "description": "Challenge 72",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 73,
+      "name": "Moon Mage Prestige",
+      "description": "Challenge 73",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 74,
+      "name": "Plant Mage Prestige",
+      "description": "Challenge 74",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 75,
+      "name": "Reginald Prestige",
+      "description": "Challenge 75",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 76,
+      "name": "Smithy Prestige",
+      "description": "Challenge 76",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 77,
+      "name": "Star Mage Prestige",
+      "description": "Challenge 77",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 78,
+      "name": "Sun Mage Prestige",
+      "description": "Challenge 78",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 79,
+      "name": "Vampire Mage Prestige",
+      "description": "Challenge 79",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 80,
+      "name": "Wizard King Prestige",
+      "description": "Challenge 80",
+      "category": "OUTFITS"
+    },
+    {
+      "id": 81,
+      "name": "Curse: One Less Spell",
+      "description": "Challenge 81",
+      "category": "MICS"
+    },
+    {
+      "id": 82,
+      "name": "Curse: Take Damage On Level Up",
+      "description": "Challenge 82",
+      "category": "MICS"
+    },
+    {
+      "id": 83,
+      "name": "Curse: Stronger Enemies",
+      "description": "Challenge 83",
+      "category": "MICS"
+    },
+    {
+      "id": 84,
+      "name": "Curse: One Less Spell",
+      "description": "Challenge 84",
+      "category": "MICS"
+    },
+    {
+      "id": 85,
+      "name": "Curse: Stronger Enemies",
+      "description": "Challenge 85",
+      "category": "MICS"
+    },
+    {
+      "id": 86,
+      "name": "Curse: Take Damage On Level Up",
+      "description": "Challenge 86",
+      "category": "MICS"
+    },
+    {
+      "id": 87,
+      "name": "Curse: Enemies Drop Less XP",
+      "description": "Challenge 87",
+      "category": "MICS"
+    },
+    {
+      "id": 88,
+      "name": "Curse: One Hit Mode",
+      "description": "Challenge 88",
+      "category": "MICS"
+    },
+    {
+      "id": 89,
+      "name": "Curse: Reduce All Healing",
+      "description": "Challenge 89",
+      "category": "MICS"
+    },
+    {
+      "id": 90,
+      "name": "Curse: One Less Spell",
+      "description": "Challenge 90",
+      "category": "MICS"
+    },
+    {
+      "id": 91,
+      "name": "Curse: Reduce All Healing",
+      "description": "Challenge 91",
+      "category": "MICS"
+    },
+    {
+      "id": 92,
+      "name": "Curse: One Less Store Item",
+      "description": "Challenge 92",
+      "category": "MICS"
+    },
+    {
+      "id": 93,
+      "name": "Curse: Stronger Enemies",
+      "description": "Challenge 93",
+      "category": "MICS"
+    },
+    {
+      "id": 94,
+      "name": "Curse: Enemies Drop Less XP",
+      "description": "Challenge 94",
+      "category": "MICS"
+    },
+    {
+      "id": 95,
+      "name": "Curse: One Less Store Item",
+      "description": "Challenge 95",
+      "category": "MICS"
+    },
+    {
+      "id": 96,
+      "name": "Crystal Frostlands",
+      "description": "Challenge 96",
+      "category": "MISSION"
+    },
+    {
+      "id": 97,
+      "name": "Scorched Abyss",
+      "description": "Challenge 97",
+      "category": "MISSION"
+    },
+    {
+      "id": 98,
+      "name": "Astral Planes",
+      "description": "Challenge 98",
+      "category": "MISSION"
+    },
+    {
+      "id": 99,
+      "name": "Title: Complete World4",
+      "description": "Challenge 99",
+      "category": "MICS"
+    },
+    {
+      "id": 100,
+      "name": "Artifact 12",
+      "description": "Challenge 100",
+      "category": "RELICS"
+    },
+    {
+      "id": 101,
+      "name": "Artifact 6",
+      "description": "Challenge 101",
+      "category": "RELICS"
+    },
+    {
+      "id": 102,
+      "name": "Artifact 13",
+      "description": "Challenge 102",
+      "category": "RELICS"
+    },
+    {
+      "id": 103,
+      "name": "Artifact 14",
+      "description": "Challenge 103",
+      "category": "RELICS"
+    },
+    {
+      "id": 104,
+      "name": "Artifact 15",
+      "description": "Challenge 104",
+      "category": "RELICS"
+    },
+    {
+      "id": 105,
+      "name": "Artifact 20",
+      "description": "Challenge 105",
+      "category": "RELICS"
+    },
+    {
+      "id": 106,
+      "name": "Artifact 11",
+      "description": "Target: 50",
+      "category": "RELICS"
+    },
+    {
+      "id": 107,
+      "name": "Artifact 7",
+      "description": "Target: 433",
+      "category": "RELICS"
+    },
+    {
+      "id": 108,
+      "name": "Artifact 19",
+      "description": "Challenge 108",
+      "category": "RELICS"
+    },
+    {
+      "id": 109,
+      "name": "Artifact 9",
+      "description": "Challenge 109",
+      "category": "RELICS"
+    },
+    {
+      "id": 110,
+      "name": "Artifact Drop 2",
+      "description": "Target: 3",
+      "category": "MICS"
+    },
+    {
+      "id": 111,
+      "name": "Artifact Drop 3",
+      "description": "Target: 8",
+      "category": "MICS"
+    },
+    {
+      "id": 112,
+      "name": "Artifact Drop Endless",
+      "description": "Target: 12",
+      "category": "MICS"
+    },
+    {
+      "id": 113,
+      "name": "Artifact 18",
+      "description": "Challenge 113",
+      "category": "RELICS"
+    },
+    {
+      "id": 114,
+      "name": "Artifact 17",
+      "description": "Challenge 114",
+      "category": "RELICS"
+    },
+    {
+      "id": 115,
+      "name": "Artifact 10",
+      "description": "Target: 10",
+      "category": "RELICS"
+    },
+    {
+      "id": 116,
+      "name": "Artifact 8",
+      "description": "Target: 5",
+      "category": "RELICS"
+    },
+    {
+      "id": 117,
+      "name": "Artifact 16",
+      "description": "Target: 900",
+      "category": "RELICS"
+    },
+    {
+      "id": 118,
+      "name": "Beam Spell",
+      "description": "Challenge 118",
+      "category": "MICS"
+    },
+    {
+      "id": 119,
+      "name": "Falling Star Spell",
+      "description": "Challenge 119",
+      "category": "MICS"
+    },
+    {
+      "id": 120,
+      "name": "Shotgun Spell",
+      "description": "Challenge 120",
+      "category": "MICS"
+    },
+    {
+      "id": 121,
+      "name": "Proximity Spell",
+      "description": "Target: 99",
+      "category": "MICS"
+    },
+    {
+      "id": 122,
+      "name": "Arrow Spell",
+      "description": "Challenge 122",
+      "category": "MICS"
+    },
+    {
+      "id": 123,
+      "name": "Boomerang Spell",
+      "description": "Challenge 123",
+      "category": "MICS"
+    },
+    {
+      "id": 124,
+      "name": "Smg Spell",
+      "description": "Challenge 124",
+      "category": "MICS"
+    },
+    {
+      "id": 125,
+      "name": "Rifle Spell",
+      "description": "Challenge 125",
+      "category": "MICS"
+    },
+    {
+      "id": 126,
+      "name": "Plant Spell",
+      "description": "Challenge 126",
+      "category": "MICS"
+    },
+    {
+      "id": 127,
+      "name": "Laser Spell",
+      "description": "Challenge 127",
+      "category": "MICS"
+    },
+    {
+      "id": 128,
+      "name": "Trail Spell",
+      "description": "Target: 850",
+      "category": "MICS"
+    },
+    {
+      "id": 129,
+      "name": "Bell Spell",
+      "description": "Challenge 129",
+      "category": "MICS"
+    },
+    {
+      "id": 130,
+      "name": "Slash Spell",
+      "description": "Challenge 130",
+      "category": "MICS"
+    },
+    {
+      "id": 131,
+      "name": "Summon Spell",
+      "description": "Target: 12840",
+      "category": "MICS"
+    },
+    {
+      "id": 132,
+      "name": "Nightmare Difficulty",
+      "description": "Target: 4",
+      "category": "MISSION"
+    },
+    {
+      "id": 133,
+      "name": "Title: Complete All Worlds Nightmare",
+      "description": "Target: 4",
+      "category": "MICS"
+    },
+    {
+      "id": 134,
+      "name": "Hard Difficulty",
+      "description": "Target: 4",
+      "category": "MISSION"
+    },
+    {
+      "id": 135,
+      "name": "Bird Mage",
+      "description": "Challenge 135",
+      "category": "WIZARDS"
+    },
+    {
+      "id": 136,
+      "name": "Campanelli",
+      "description": "Challenge 136",
+      "category": "WIZARDS"
+    },
+    {
+      "id": 137,
+      "name": "Bell Mage",
+      "description": "Challenge 137",
+      "category": "WIZARDS"
+    },
+    {
+      "id": 138,
+      "name": "Flute Mage",
+      "description": "Challenge 138",
+      "category": "WIZARDS"
+    },
+    {
+      "id": 139,
+      "name": "Hatty",
+      "description": "Challenge 139",
+      "category": "WIZARDS"
+    },
+    {
+      "id": 140,
+      "name": "Key Mage",
+      "description": "Challenge 140",
+      "category": "WIZARDS"
+    },
+    {
+      "id": 141,
+      "name": "Ludwig",
+      "description": "Challenge 141",
+      "category": "WIZARDS"
+    },
+    {
+      "id": 142,
+      "name": "Moon Mage",
+      "description": "Challenge 142",
+      "category": "WIZARDS"
+    },
+    {
+      "id": 143,
+      "name": "Plant Mage",
+      "description": "Challenge 143",
+      "category": "WIZARDS"
+    },
+    {
+      "id": 144,
+      "name": "Smithy",
+      "description": "Challenge 144",
+      "category": "WIZARDS"
+    },
+    {
+      "id": 145,
+      "name": "Star Mage",
+      "description": "Challenge 145",
+      "category": "WIZARDS"
+    },
+    {
+      "id": 146,
+      "name": "Sun Mage",
+      "description": "Challenge 146",
+      "category": "WIZARDS"
+    },
+    {
+      "id": 147,
+      "name": "Vampire Mage",
+      "description": "Challenge 147",
+      "category": "WIZARDS"
+    },
+    {
+      "id": 148,
+      "name": "Wizard King",
+      "description": "Challenge 148",
+      "category": "WIZARDS"
+    }
+  ],
+  "categories": [
+    "MICS",
+    "MISSION",
+    "OUTFITS",
+    "RELICS",
+    "WIZARDS"
+  ],
+  "category_labels": {
+    "MICS": "杂项",
+    "MISSION": "任务",
+    "OUTFITS": "外观",
+    "SCROLLS": "卷轴",
+    "SPELLS": "法术",
+    "WIZARDS": "巫师",
+    "ASCENSION": "飞升",
+    "RELICS": "遗物"
+  }
+}

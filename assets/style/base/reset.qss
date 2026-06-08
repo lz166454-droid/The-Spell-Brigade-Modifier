@@ -1,0 +1,89 @@
+/* 主窗口、标题栏 */
+
+#mainWindow {
+    background: {{bg_window}};
+}
+
+#customTitleBar {
+    background: {{bg_window}};
+}
+
+#contentArea {
+    background: {{bg_area}};
+    border-radius: 8px;
+}
+
+#titleLabel {
+    background: transparent;
+    font: 14px 'Microsoft YaHei UI';
+    padding: 0 8px;
+    color: {{text_title}};
+}
+
+#maxBtn,
+#minBtn {
+    qproperty-normalColor: {{title_btn_normal}};
+    qproperty-hoverColor: {{title_btn_normal}};
+    qproperty-pressedColor: {{title_btn_normal}};
+    qproperty-normalBackgroundColor: rgba(0, 0, 0, 0);
+    qproperty-hoverBackgroundColor: {{title_btn_hover_bg}};
+    qproperty-pressedBackgroundColor: {{title_btn_pressed_bg}};
+}
+
+#closeBtn {
+    qproperty-normalColor: {{title_btn_normal}};
+    qproperty-hoverColor: #ffffff;
+    qproperty-pressedColor: #ffffff;
+    qproperty-normalBackgroundColor: rgba(0, 0, 0, 0);
+    qproperty-hoverBackgroundColor: #e81123;
+    qproperty-pressedBackgroundColor: #f1707a;
+}
+
+#titleBarThemeBtn {
+    qproperty-normalColor: {{title_btn_normal}};
+    qproperty-hoverColor: {{title_btn_normal}};
+    qproperty-pressedColor: {{title_btn_normal}};
+    qproperty-normalBackgroundColor: rgba(0, 0, 0, 0);
+    qproperty-hoverBackgroundColor: {{title_btn_hover_bg}};
+    qproperty-pressedBackgroundColor: {{title_btn_pressed_bg}};
+}
+
+#maxBtn:focus,
+#minBtn:focus,
+#closeBtn:focus,
+#titleBarThemeBtn:focus {
+    outline: none;
+}
+
+#statusBar {
+    background: {{bg_panel}};
+    border-top: 1px solid {{border_subtle}};
+}
+
+QLabel#statusBarText {
+    color: {{text_secondary}};
+    font: 12px 'Microsoft YaHei UI';
+    background: transparent;
+}
+
+QLabel#trainerStatusText {
+    color: {{text_secondary}};
+    font: 12px 'Microsoft YaHei UI';
+    background: transparent;
+}
+
+QAbstractButton,
+QPushButton,
+QToolButton,
+QCheckBox,
+QRadioButton {
+    outline: none;
+}
+
+QAbstractButton:focus,
+QPushButton:focus,
+QToolButton:focus,
+QCheckBox:focus,
+QRadioButton:focus {
+    outline: none;
+}

@@ -1,0 +1,79 @@
+QFrame#panelCard {
+    background: {{bg_card}};
+    border: 1px solid {{border_subtle}};
+    border-radius: 8px;
+}
+
+QFrame#slotPanel {
+    background: {{bg_card}};
+    border: 1px solid {{border_subtle}};
+    border-radius: 8px;
+}
+
+QFrame#safetyBanner {
+    background: {{banner_warning_bg}};
+    border: 1px solid {{banner_warning_border}};
+    border-radius: 6px;
+}
+
+QLabel#safetyBannerText {
+    color: {{banner_warning_text}};
+    font: 12px 'Microsoft YaHei UI';
+}
+
+QFrame#safetyBannerOk {
+    background: {{banner_ok_bg}};
+    border: 1px solid {{banner_ok_border}};
+    border-radius: 6px;
+}
+
+QLabel#safetyBannerOkText {
+    color: {{banner_ok_text}};
+    font: 12px 'Microsoft YaHei UI';
+}
+
+QFrame#slotCell {
+    background: {{slot_bg}};
+    border: 1px solid {{slot_border}};
+    border-radius: 6px;
+    min-width: 120px;
+    min-height: 32px;
+    max-height: 36px;
+}
+
+QFrame#slotCellActive {
+    background: {{slot_bg_active}};
+    border: 2px solid {{slot_border_active}};
+    border-radius: 6px;
+    min-width: 120px;
+    min-height: 32px;
+    max-height: 36px;
+}
+
+QLabel#slotIndex {
+    color: {{text_muted}};
+    font: 11px 'Consolas';
+    min-width: 24px;
+}
+
+QLabel#slotGoldCaption {
+    color: {{text_muted}};
+    font: 10px 'Microsoft YaHei UI';
+}
+
+QLabel#slotGold {
+    color: {{accent_gold}};
+    font: bold 12px 'Consolas';
+}
+
+QLabel#slotGoldActive {
+    color: {{accent_gold}};
+    font: bold 12px 'Consolas';
+}
+
+#toolbar {
+    background: {{bg_panel}};
+    border-bottom: 1px solid {{border_subtle}};
+    min-height: 32px;
+    max-height: 34px;
+}

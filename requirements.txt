@@ -1,0 +1,5 @@
+rich
+PySide6
+PySidesix-Frameless-Window
+Nuitka[onefile]
+cryptography

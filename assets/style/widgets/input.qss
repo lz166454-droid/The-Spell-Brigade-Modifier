@@ -1,0 +1,54 @@
+QSpinBox, QDoubleSpinBox, QLineEdit {
+    background: {{bg_input}};
+    color: {{text_primary}};
+    border: 1px solid {{border_subtle}};
+    border-radius: 6px;
+    font: 13px 'Consolas';
+    padding: 6px 10px;
+    min-height: 28px;
+    selection-background-color: {{accent_magic}};
+}
+
+QSpinBox:focus, QDoubleSpinBox:focus, QLineEdit:focus {
+    border-color: {{border_focus}};
+}
+
+QCheckBox {
+    color: {{text_primary}};
+    font: 12px 'Microsoft YaHei UI';
+    spacing: 6px;
+}
+
+QLabel#fieldLabel {
+    color: {{text_secondary}};
+    font: 12px 'Microsoft YaHei UI';
+}
+
+QLabel#statValue {
+    color: {{text_primary}};
+    font: 13px 'Consolas';
+}
+
+QLabel#sectionTitle {
+    color: {{text_title}};
+    font: bold 13px 'Microsoft YaHei UI';
+    padding: 0;
+    margin: 0;
+}
+
+QLabel#sectionHint {
+    color: {{text_muted}};
+    font: 11px 'Microsoft YaHei UI';
+    padding: 0;
+    margin: 0;
+}
+
+QLabel#goldValue {
+    color: {{accent_gold}};
+    font: bold 22px 'Consolas';
+}
+
+QLabel#placeholderLabel {
+    color: {{text_muted}};
+    font: 14px 'Microsoft YaHei UI';
+}
