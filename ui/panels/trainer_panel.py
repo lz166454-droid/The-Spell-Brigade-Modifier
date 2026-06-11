@@ -45,6 +45,7 @@ class TrainerPanel(QWidget):
         super().__init__(parent)
         self._vm: TrainerViewModel | None = None
         self._updating = False
+        self._tab_preview_active = False
         self._basic_spins: dict[str, TrainerCommitSpinBox] = {}
         self._basic_labels: dict[str, QLabel] = {}
         self._hidden_spins: dict[str, TrainerCommitSpinBox] = {}
@@ -60,6 +61,7 @@ class TrainerPanel(QWidget):
         self._preset_list: QListWidget | None = None
         self._preset_empty_hint: QLabel | None = None
         self._preset_apply_btn: QPushButton | None = None
+        self._preset_preview_btn: QPushButton | None = None
         self._preset_save_btn: QPushButton | None = None
         self._preset_default_btn: QPushButton | None = None
         self._preset_rename_btn: QPushButton | None = None
@@ -185,7 +187,7 @@ class TrainerPanel(QWidget):
         self._preset_list.setObjectName('trainerPresetList')
         self._preset_list.setMinimumHeight(180)
         self._preset_list.itemSelectionChanged.connect(self._update_preset_actions)
-        self._preset_list.itemDoubleClicked.connect(self._on_preset_apply_clicked)
+        self._preset_list.itemDoubleClicked.connect(self._on_preset_preview_clicked)
         column_layout.addWidget(self._preset_list, 1)
         self._preset_empty_hint = QLabel(column)
         self._preset_empty_hint.setObjectName('placeholderLabel')
@@ -193,15 +195,22 @@ class TrainerPanel(QWidget):
         column_layout.addWidget(self._preset_empty_hint)
         action_row_top = QHBoxLayout()
         action_row_top.setSpacing(8)
+        self._preset_preview_btn = QPushButton(column)
+        self._preset_preview_btn.setObjectName('secondaryBtn')
         self._preset_apply_btn = QPushButton(column)
         self._preset_apply_btn.setObjectName('trainerPresetApplyBtn')
         self._preset_save_btn = QPushButton(column)
         self._preset_save_btn.setObjectName('secondaryBtn')
+        self._preset_preview_btn.clicked.connect(self._on_preset_preview_clicked)
         self._preset_apply_btn.clicked.connect(self._on_preset_apply_clicked)
         self._preset_save_btn.clicked.connect(self._on_preset_save_clicked)
+        action_row_top.addWidget(self._preset_preview_btn)
         action_row_top.addWidget(self._preset_apply_btn)
-        action_row_top.addWidget(self._preset_save_btn)
         column_layout.addLayout(action_row_top)
+        action_row_save = QHBoxLayout()
+        action_row_save.setSpacing(8)
+        action_row_save.addWidget(self._preset_save_btn)
+        column_layout.addLayout(action_row_save)
         action_row_bottom = QHBoxLayout()
         action_row_bottom.setSpacing(8)
         self._preset_default_btn = QPushButton(column)
@@ -390,6 +399,8 @@ class TrainerPanel(QWidget):
             self._preset_section_title.setText(tr('trainer.tab.presets'))
         if self._preset_empty_hint is not None:
             self._preset_empty_hint.setText(tr('trainer.preset.empty_hint'))
+        if self._preset_preview_btn is not None:
+            self._preset_preview_btn.setText(tr('trainer.preset.preview'))
         if self._preset_apply_btn is not None:
             self._preset_apply_btn.setText(tr('trainer.preset.apply'))
         if self._preset_save_btn is not None:
@@ -467,6 +478,8 @@ class TrainerPanel(QWidget):
     def _on_attach_state_changed(self) -> None:
         if self._vm is None:
             return
+        if self._vm.attached:
+            self._tab_preview_active = False
         self.set_attached_ui(self._vm.attached)
 
     def _on_spells_changed(self, spells: list) -> None:
@@ -474,12 +487,13 @@ class TrainerPanel(QWidget):
 
     def _on_stats_updated(self, stats: dict, spells: list) -> None:
         self._updating = True
-        for key, spin in self._basic_spins.items():
-            if key in stats and not spin.hasFocus():
-                spin.setValue(float(stats[key]))
-        for key, spin in self._hidden_spins.items():
-            if key in stats and not spin.hasFocus():
-                spin.setValue(float(stats[key]))
+        if not self._tab_preview_active:
+            for key, spin in self._basic_spins.items():
+                if key in stats and not spin.hasFocus():
+                    spin.setValue(float(stats[key]))
+            for key, spin in self._hidden_spins.items():
+                if key in stats and not spin.hasFocus():
+                    spin.setValue(float(stats[key]))
         for spell in spells:
             spell_id = int(spell['id'])
             spell_stats = spell.get('stats', {})
@@ -498,6 +512,8 @@ class TrainerPanel(QWidget):
         key = spin.property('stat_key')
         if not key:
             return
+        if str(key) in self._basic_spins or str(key) in self._hidden_spins:
+            self._tab_preview_active = False
         spell_id = spin.property('spell_id')
         sid = None if spell_id is None or int(spell_id) < 0 else int(spell_id)
         self._vm.apply_stat(str(key), value, spell_id=sid)
@@ -521,9 +537,11 @@ class TrainerPanel(QWidget):
         preset_id = item.data(Qt.ItemDataRole.UserRole)
         return str(preset_id) if preset_id else None
 
-    def _capture_basic_stats(self) -> dict[str, float]:
+    def _capture_tab_stats(self) -> dict[str, float]:
         stats: dict[str, float] = {}
         for key, spin in self._basic_spins.items():
+            stats[key] = float(spin.value())
+        for key, spin in self._hidden_spins.items():
             stats[key] = float(spin.value())
         return stats
 
@@ -553,6 +571,8 @@ class TrainerPanel(QWidget):
     def _update_preset_actions(self) -> None:
         selected_id = self._selected_preset_id()
         attached = self._vm is not None and self._vm.attached
+        if self._preset_preview_btn is not None:
+            self._preset_preview_btn.setEnabled(selected_id is not None)
         if self._preset_apply_btn is not None:
             self._preset_apply_btn.setEnabled(selected_id is not None and attached)
         if self._preset_save_btn is not None:
@@ -566,12 +586,41 @@ class TrainerPanel(QWidget):
             self._preset_default_btn.setEnabled(selected_id is not None)
             self._preset_default_btn.setText(tr('trainer.preset.clear_default') if is_default else tr('trainer.preset.set_default'))
 
+    def _clear_tab_spin_focus(self) -> None:
+        for spin in list(self._basic_spins.values()) + list(self._hidden_spins.values()):
+            if spin.hasFocus():
+                spin.clearFocus()
+
+    def _show_preset_preview(self, stats: dict[str, float]) -> None:
+        self._clear_tab_spin_focus()
+        self._updating = True
+        self._tab_preview_active = True
+        for key, spin in self._basic_spins.items():
+            if key in stats:
+                spin.setValue(float(stats[key]))
+        for key, spin in self._hidden_spins.items():
+            if key in stats:
+                spin.setValue(float(stats[key]))
+        self._updating = False
+
+    def _on_preset_preview_clicked(self, *_args) -> None:
+        if self._vm is None:
+            return
+        preset_id = self._selected_preset_id()
+        if preset_id is None:
+            return
+        preset = self._vm.preset_store.get_preset(preset_id)
+        if preset is None:
+            return
+        self._show_preset_preview(preset.stats)
+
     def _on_preset_apply_clicked(self, *_args) -> None:
         if self._vm is None or not self._vm.attached:
             return
         preset_id = self._selected_preset_id()
         if preset_id is None:
             return
+        self._tab_preview_active = False
         self._vm.apply_preset(preset_id)
         self._flash_preset_apply_btn()
 
@@ -595,7 +644,7 @@ class TrainerPanel(QWidget):
     def _on_preset_save_clicked(self) -> None:
         if self._vm is None:
             return
-        stats = self._capture_basic_stats()
+        stats = self._capture_tab_stats()
         name, ok = QInputDialog.getText(self, tr('trainer.preset.save_dialog_title'), tr('trainer.preset.save_dialog_label'))
         if not ok:
             return

@@ -2,11 +2,12 @@ import json
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from lab.trainer.stats_meta import BASIC_STATS
+from lab.trainer.stats_meta import BASIC_STATS, HIDDEN_STATS
 from ui.paths import CONFIG_DIR
 
 PRESETS_FILE = CONFIG_DIR / 'trainer_presets.json'
-BASIC_STAT_KEYS = frozenset(item.key for item in BASIC_STATS)
+PRESET_STATS = BASIC_STATS + HIDDEN_STATS
+PRESET_STAT_KEYS = frozenset(item.key for item in PRESET_STATS)
 MAX_PRESET_NAME_LEN = 32
 PRESETS_VERSION = 1
 
@@ -21,9 +22,9 @@ class TrainerPreset:
 def _utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
-def normalize_basic_stats(stats: dict[str, float]) -> dict[str, float]:
+def normalize_preset_stats(stats: dict[str, float]) -> dict[str, float]:
     normalized: dict[str, float] = {}
-    for item in BASIC_STATS:
+    for item in PRESET_STATS:
         if item.key not in stats:
             continue
         value = float(stats[item.key])
@@ -105,7 +106,7 @@ class TrainerPresetStore:
             raise ValueError('empty_name')
         if len(trimmed) > MAX_PRESET_NAME_LEN:
             raise ValueError('name_too_long')
-        normalized_stats = normalize_basic_stats(stats)
+        normalized_stats = normalize_preset_stats(stats)
         now = _utc_now()
         if preset_id is not None:
             for index, preset in enumerate(self._presets):
@@ -208,7 +209,7 @@ class TrainerPresetStore:
             created_at = _utc_now()
         if not isinstance(updated_at, str):
             updated_at = created_at
-        parsed_stats = normalize_basic_stats({key: float(value) for key, value in stats.items() if key in BASIC_STAT_KEYS})
+        parsed_stats = normalize_preset_stats({key: float(value) for key, value in stats.items() if key in PRESET_STAT_KEYS})
         if not parsed_stats:
             return None
         return TrainerPreset(

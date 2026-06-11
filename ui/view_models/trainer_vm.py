@@ -1,7 +1,6 @@
 from PySide6.QtCore import QObject, QTimer, Signal, Slot
 from lab.trainer.session import TrainerSession
-from lab.trainer.stats_meta import BASIC_STATS
-from ui.trainer_presets import TrainerPreset, TrainerPresetStore
+from ui.trainer_presets import PRESET_STATS, TrainerPreset, TrainerPresetStore
 
 class TrainerViewModel(QObject):
     attach_failed = Signal(str)
@@ -100,10 +99,10 @@ class TrainerViewModel(QObject):
         except Exception as exc:
             self._fail('写入后刷新属性失败', exc)
 
-    def apply_basic_stats(self, stats: dict[str, float]) -> None:
+    def apply_tab_stats(self, stats: dict[str, float]) -> None:
         if not self._session.attached:
             return
-        for item in BASIC_STATS:
+        for item in PRESET_STATS:
             if item.key not in stats:
                 continue
             value = float(stats[item.key])
@@ -119,6 +118,9 @@ class TrainerViewModel(QObject):
             self._emit_snapshot()
         except Exception as exc:
             self._fail('写入后刷新属性失败', exc)
+
+    def apply_basic_stats(self, stats: dict[str, float]) -> None:
+        self.apply_tab_stats(stats)
 
     def apply_preset(self, preset_id: str) -> None:
         preset = self._preset_store.get_preset(preset_id)
