@@ -89,13 +89,15 @@ QFrame#trainerHeaderDivider {
     margin-right: 4px;
 }
 
-QTabWidget#saveEditTabs::pane {
+QTabWidget#saveEditTabs::pane,
+QTabWidget#trainerTabs::pane {
     border: none;
     background: transparent;
     top: -1px;
 }
 
-QTabWidget#saveEditTabs QTabBar::tab {
+QTabWidget#saveEditTabs QTabBar::tab,
+QTabWidget#trainerTabs QTabBar::tab {
     background: transparent;
     color: {{text_muted}};
     border: none;
@@ -105,12 +107,14 @@ QTabWidget#saveEditTabs QTabBar::tab {
     font: 12px 'Microsoft YaHei UI';
 }
 
-QTabWidget#saveEditTabs QTabBar::tab:selected {
+QTabWidget#saveEditTabs QTabBar::tab:selected,
+QTabWidget#trainerTabs QTabBar::tab:selected {
     color: {{text_primary}};
     border-bottom: 2px solid {{accent_magic}};
 }
 
-QTabWidget#saveEditTabs QTabBar::tab:hover {
+QTabWidget#saveEditTabs QTabBar::tab:hover,
+QTabWidget#trainerTabs QTabBar::tab:hover {
     color: {{text_primary}};
     background: {{nav_bg_hover}};
 }

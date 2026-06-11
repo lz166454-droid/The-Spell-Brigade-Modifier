@@ -178,15 +178,6 @@ def read_stat_display_value(
         return sum_modifiers(mem, modifiers_ptr, ctx, exclude_hidden=True)
     return _read_numeric_display_value(mem, stat_ptr, ctx)
 
-def read_spell_damage_panel_percent(mem: ProcessMemory, stats_list_ptr: int, spell_stat_ptr: int, ctx: StatCalcContext) -> float:
-    total = 0.0
-    if is_user_ptr(spell_stat_ptr):
-        total += sum_modifiers(mem, mem.read_u64(spell_stat_ptr + off.STAT_MODIFIERS), ctx, exclude_hidden=True)
-    char_ptr = find_stat_by_type(mem, stats_list_ptr, off.STAT_TYPE_DAMAGE)
-    if char_ptr:
-        total += sum_modifiers(mem, mem.read_u64(char_ptr + off.STAT_MODIFIERS), ctx, exclude_hidden=True)
-    return total
-
 def write_stat_base_value(mem: ProcessMemory, stat_ptr: int, value: float) -> bool:
     return mem.write_f32(stat_ptr + off.STAT_BASE_VALUE, value)
 
@@ -271,47 +262,6 @@ def write_modifier_sum_panel_value(
             return False
     return mem.write_f32(adjustable[-1] + off.MODIFIER_VALUE, target - fixed_sum)
 
-def write_spell_damage_panel_percent(
-    mem: ProcessMemory,
-    stats_list_ptr: int,
-    spell_stat_ptr: int,
-    ctx: StatCalcContext,
-    target: float,
-) -> bool:
-    char_ptr = find_stat_by_type(mem, stats_list_ptr, off.STAT_TYPE_DAMAGE)
-    char_fixed = 0.0
-    char_adjustable: list[int] = []
-    spell_fixed = 0.0
-    spell_adjustable: list[int] = []
-    if char_ptr:
-        char_fixed, char_adjustable = _scan_modifiers_for_write(
-            mem,
-            mem.read_u64(char_ptr + off.STAT_MODIFIERS),
-            ctx,
-            non_starting_only=False,
-            exclude_hidden=True,
-        )
-    if is_user_ptr(spell_stat_ptr):
-        spell_fixed, spell_adjustable = _scan_modifiers_for_write(
-            mem,
-            mem.read_u64(spell_stat_ptr + off.STAT_MODIFIERS),
-            ctx,
-            non_starting_only=False,
-            exclude_hidden=True,
-        )
-    for modifier_ptr in char_adjustable:
-        if not mem.write_f32(modifier_ptr + off.MODIFIER_VALUE, 0.0):
-            return False
-    for modifier_ptr in spell_adjustable[:-1]:
-        if not mem.write_f32(modifier_ptr + off.MODIFIER_VALUE, 0.0):
-            return False
-    remainder = target - char_fixed - spell_fixed
-    if spell_adjustable:
-        return mem.write_f32(spell_adjustable[-1] + off.MODIFIER_VALUE, remainder)
-    if char_adjustable:
-        return mem.write_f32(char_adjustable[-1] + off.MODIFIER_VALUE, remainder)
-    return False
-
 def write_stat_panel_value(
     mem: ProcessMemory,
     stat_ptr: int,
@@ -319,12 +269,7 @@ def write_stat_panel_value(
     ctx: StatCalcContext | None = None,
     *,
     display_type: str = DISPLAY_VALUE,
-    panel_source: str = 'character',
-    stats_list_ptr: int = 0,
-    spell_stat_ptr: int = 0,
 ) -> bool:
-    if panel_source == 'spell_damage':
-        return write_spell_damage_panel_percent(mem, stats_list_ptr, spell_stat_ptr, ctx, target)
     if display_type == DISPLAY_MODIFIER_PERCENT:
         modifiers_ptr = mem.read_u64(stat_ptr + off.STAT_MODIFIERS)
         non_starting_only = _modifier_percent_non_starting_only(mem, modifiers_ptr)

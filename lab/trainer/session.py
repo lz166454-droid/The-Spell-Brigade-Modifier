@@ -1,14 +1,25 @@
+from dataclasses import dataclass
 from lab.trainer import offsets as off
 from lab.trainer.diag import log, log_error
 from lab.trainer.il2cpp_layout import read_network_variable_float, write_network_variable_float
 from lab.trainer.memory import ProcessMemory, TrainerMemoryError
 from lab.trainer.offsets import GAME_VERSION, PROCESS_NAMES
-from lab.trainer.player_chain import PlayerHandles, format_handles, read_character_stats, resolve_player_handles
-from lab.trainer.spell_stats import apply_super_attack, reapply_super_attack
+from lab.trainer.player_chain import PlayerHandles, format_handles, read_character_stats, read_panel_stat, resolve_player_handles
+from lab.trainer.spell_stats import apply_super_attack, list_equipped_spells, reapply_super_attack, spell_stat_ptr
 from lab.trainer.static_resolve import TrainerConfig, load_config, resolve_manager_cached, resolve_manager_ptr
-from lab.trainer.spell_stats import primary_spell_stat_ptr
 from lab.trainer.stat_calc import StatCalcContext, find_stat_by_type, write_stat_panel_value
-from lab.trainer.stats_meta import CHARACTER_STATS, STAT_BY_KEY, STAT_BY_TYPE
+from lab.trainer.stats_meta import BASIC_STATS, HIDDEN_STATS, SPELL_STATS, SPELL_STAT_BY_KEY, STAT_BY_KEY
+
+@dataclass
+class SpellSnapshot:
+    id: int
+    name: str
+    stats: dict[str, float]
+
+@dataclass
+class TrainerSnapshot:
+    stats: dict[str, float]
+    spells: list[SpellSnapshot]
 
 class TrainerSession:
     def __init__(self) -> None:
@@ -48,11 +59,14 @@ class TrainerSession:
         log(f'对象链: {format_handles(self._handles)}')
         if not self._handles.health_container_ptr:
             self.refresh_handles()
-        stats = self.read_all_stats()
-        log(f'读取到 {len(stats)} 项角色属性（面板值）')
-        for item in CHARACTER_STATS:
-            if item.key in stats:
-                log(f'  {item.key}: {stats[item.key]}')
+        snapshot = self.read_snapshot()
+        log(f'读取到 {len(snapshot.stats)} 项角色属性（面板值）')
+        for item in BASIC_STATS + HIDDEN_STATS:
+            if item.key in snapshot.stats:
+                log(f'  {item.key}: {snapshot.stats[item.key]}')
+        log(f'已装备咒语 {len(snapshot.spells)} 个')
+        for spell in snapshot.spells:
+            log(f'  spell #{spell.id}: {spell.stats}')
         log('附加成功')
 
     def detach(self) -> None:
@@ -86,48 +100,73 @@ class TrainerSession:
         if self._super_attack and self._handles:
             reapply_super_attack(self._mem, self._handles.player_stats_ptr)
 
-    def read_all_stats(self) -> dict[str, float]:
+    def _round_stat(self, item, value: float) -> float:
+        return round(value) if item.decimals == 0 else round(value, item.decimals)
+
+    def read_snapshot(self) -> TrainerSnapshot:
         if not self._handles:
-            return {}
-        raw = read_character_stats(self._mem, self._handles, CHARACTER_STATS)
-        result: dict[str, float] = {}
-        for stat_type, value in raw.items():
-            item = STAT_BY_TYPE.get(stat_type)
+            return TrainerSnapshot(stats={}, spells=[])
+        raw = read_character_stats(self._mem, self._handles, BASIC_STATS + HIDDEN_STATS)
+        stats: dict[str, float] = {}
+        for key, value in raw.items():
+            item = STAT_BY_KEY.get(key)
             if not item:
                 continue
-            result[item.key] = round(value) if item.decimals == 0 else round(value, item.decimals)
-        return result
+            stats[key] = self._round_stat(item, value)
+        ctx = StatCalcContext(stats_list_ptr=self._handles.stats_list_ptr)
+        spells: list[SpellSnapshot] = []
+        for handle in list_equipped_spells(self._mem, self._handles.player_stats_ptr):
+            spell_stats: dict[str, float] = {}
+            for item in SPELL_STATS:
+                value = read_panel_stat(self._mem, self._handles, item, ctx, spell_id=handle.spell_id)
+                if value is not None:
+                    spell_stats[item.key] = self._round_stat(item, value)
+            spells.append(SpellSnapshot(id=handle.spell_id, name=handle.name, stats=spell_stats))
+        return TrainerSnapshot(stats=stats, spells=spells)
 
-    def read_stat(self, key: str) -> float | None:
-        item = STAT_BY_KEY.get(key)
+    def read_all_stats(self) -> dict[str, float]:
+        return self.read_snapshot().stats
+
+    def read_stat(self, key: str, spell_id: int | None = None) -> float | None:
+        if spell_id is not None:
+            item = SPELL_STAT_BY_KEY.get(key)
+        else:
+            item = STAT_BY_KEY.get(key)
         if not item or not self._handles:
             return None
-        from lab.trainer.player_chain import _read_panel_stat
         ctx = StatCalcContext(stats_list_ptr=self._handles.stats_list_ptr)
-        return _read_panel_stat(self._mem, self._handles, item, ctx)
+        return read_panel_stat(self._mem, self._handles, item, ctx, spell_id=spell_id)
 
-    def write_stat(self, key: str, value: float) -> bool:
+    def write_stat(self, key: str, value: float, spell_id: int | None = None) -> bool:
+        if not self._handles:
+            return False
+        ctx = StatCalcContext(stats_list_ptr=self._handles.stats_list_ptr)
+        if spell_id is not None:
+            item = SPELL_STAT_BY_KEY.get(key)
+            if not item:
+                return False
+            stat_ptr = spell_stat_ptr(self._mem, self._handles.player_stats_ptr, spell_id, item.stat_type)
+            if not stat_ptr:
+                return False
+            return write_stat_panel_value(
+                self._mem,
+                stat_ptr,
+                value,
+                ctx,
+                display_type=item.display_type,
+            )
         item = STAT_BY_KEY.get(key)
-        if not item or not self._handles:
+        if not item:
             return False
         stat_ptr = find_stat_by_type(self._mem, self._handles.stats_list_ptr, item.stat_type)
-        if not stat_ptr and item.panel_source != 'spell_damage':
+        if not stat_ptr:
             return False
-        ctx = StatCalcContext(stats_list_ptr=self._handles.stats_list_ptr)
-        spell_stat_ptr = 0
-        if item.panel_source == 'spell_damage':
-            spell_stat_ptr = primary_spell_stat_ptr(self._mem, self._handles.player_stats_ptr, item.stat_type)
-            if not spell_stat_ptr and not stat_ptr:
-                return False
         ok = write_stat_panel_value(
             self._mem,
             stat_ptr,
             value,
             ctx,
             display_type=item.display_type,
-            panel_source=item.panel_source,
-            stats_list_ptr=self._handles.stats_list_ptr,
-            spell_stat_ptr=spell_stat_ptr,
         )
         if ok and key == 'max_health':
             self._sync_health_max(value)

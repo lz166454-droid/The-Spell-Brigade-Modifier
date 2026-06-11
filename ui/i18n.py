@@ -89,3 +89,6 @@ def tr(key: str, **kwargs) -> str:
 
 def stat_label(stat_key: str) -> str:
     return tr(f'trainer.stat.{stat_key}')
+
+def trainer_tab_label(tab: str, **kwargs) -> str:
+    return tr(f'trainer.tab.{tab}', **kwargs)

@@ -17,11 +17,14 @@ def cmd_stats(_args: argparse.Namespace) -> int:
     session = TrainerSession()
     try:
         session.attach()
-        stats = session.read_all_stats()
-        max_hp = stats.get('max_health', 0)
-        print(f'max_health: {max_hp}')
-        for key, value in stats.items():
+        snapshot = session.read_snapshot()
+        print('[character stats]')
+        for key, value in snapshot.stats.items():
             print(f'{key}: {value}')
+        for spell in snapshot.spells:
+            print(f'[spell #{spell.id}]')
+            for key, value in spell.stats.items():
+                print(f'  {key}: {value}')
     except Exception as exc:
         log_error(str(exc))
         return 1

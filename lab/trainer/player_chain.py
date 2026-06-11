@@ -2,9 +2,8 @@ from dataclasses import dataclass
 from lab.trainer import offsets as off
 from lab.trainer.il2cpp_layout import read_list_item, read_list_size, read_network_variable_float
 from lab.trainer.memory import ProcessMemory, is_user_ptr
-from lab.trainer.spell_stats import primary_spell_stat_ptr
-from lab.trainer.stat_calc import StatCalcContext, find_stat_by_type, read_spell_damage_panel_percent, read_stat_display_value
-from lab.trainer.stats_meta import STAT_BY_TYPE
+from lab.trainer.spell_stats import spell_stat_ptr
+from lab.trainer.stat_calc import StatCalcContext, find_stat_by_type, read_stat_display_value
 
 @dataclass
 class PlayerHandles:
@@ -135,22 +134,31 @@ def format_handles(handles: PlayerHandles) -> str:
         f'health={handles.health_container_ptr:#x}'
     )
 
-def _read_panel_stat(mem: ProcessMemory, handles: PlayerHandles, item, ctx: StatCalcContext) -> float | None:
-    if item.panel_source == 'spell_damage':
-        spell_ptr = primary_spell_stat_ptr(mem, handles.player_stats_ptr, item.stat_type)
-        if not spell_ptr and not find_stat_by_type(mem, handles.stats_list_ptr, item.stat_type):
+def read_panel_stat(
+    mem: ProcessMemory,
+    handles: PlayerHandles,
+    item,
+    ctx: StatCalcContext,
+    *,
+    spell_id: int | None = None,
+) -> float | None:
+    if item.panel_source == 'spell':
+        if spell_id is None:
             return None
-        return read_spell_damage_panel_percent(mem, handles.stats_list_ptr, spell_ptr, ctx)
+        stat_ptr = spell_stat_ptr(mem, handles.player_stats_ptr, spell_id, item.stat_type)
+        if not stat_ptr:
+            return None
+        return read_stat_display_value(mem, stat_ptr, ctx, display_type=item.display_type)
     stat_ptr = find_stat_by_type(mem, handles.stats_list_ptr, item.stat_type)
     if not stat_ptr:
         return None
     return read_stat_display_value(mem, stat_ptr, ctx, display_type=item.display_type)
 
-def read_character_stats(mem: ProcessMemory, handles: PlayerHandles, stat_defs: tuple) -> dict[int, float]:
-    values: dict[int, float] = {}
+def read_character_stats(mem: ProcessMemory, handles: PlayerHandles, stat_defs: tuple) -> dict[str, float]:
+    values: dict[str, float] = {}
     ctx = StatCalcContext(stats_list_ptr=handles.stats_list_ptr)
     for item in stat_defs:
-        value = _read_panel_stat(mem, handles, item, ctx)
+        value = read_panel_stat(mem, handles, item, ctx)
         if value is not None:
-            values[item.stat_type] = value
+            values[item.key] = value
     return values

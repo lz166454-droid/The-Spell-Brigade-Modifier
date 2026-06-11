@@ -4,7 +4,8 @@ from lab.trainer.session import TrainerSession
 class TrainerViewModel(QObject):
     attach_failed = Signal(str)
     attach_succeeded = Signal()
-    stats_updated = Signal(dict)
+    stats_updated = Signal(dict, list)
+    spells_changed = Signal(list)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -12,6 +13,7 @@ class TrainerViewModel(QObject):
         self._timer = QTimer(self)
         self._timer.setInterval(800)
         self._timer.timeout.connect(self._on_tick)
+        self._last_spell_ids: tuple[int, ...] = ()
 
     @property
     def attached(self) -> bool:
@@ -33,6 +35,7 @@ class TrainerViewModel(QObject):
         self._connect_session()
 
     def _connect_session(self) -> None:
+        self._last_spell_ids = ()
         try:
             self._session.attach()
         except Exception as exc:
@@ -49,12 +52,12 @@ class TrainerViewModel(QObject):
         self._session.refresh_handles()
         self._emit_snapshot()
 
-    @Slot(str, float)
-    def apply_stat(self, key: str, value: float) -> None:
+    def apply_stat(self, key: str, value: float, spell_id: int | None = None) -> None:
         if not self._session.attached:
             return
-        if not self._session.write_stat(key, value):
-            self.attach_failed.emit(f'写入属性失败: {key}')
+        if not self._session.write_stat(key, value, spell_id=spell_id):
+            target = f'{key}#{spell_id}' if spell_id is not None else key
+            self.attach_failed.emit(f'写入属性失败: {target}')
             return
         self._emit_snapshot()
 
@@ -80,6 +83,17 @@ class TrainerViewModel(QObject):
             return
         self._emit_snapshot()
 
+    def _spell_payload(self, snapshot) -> list[dict]:
+        return [
+            {'id': spell.id, 'name': spell.name, 'stats': spell.stats}
+            for spell in snapshot.spells
+        ]
+
     def _emit_snapshot(self) -> None:
-        stats = self._session.read_all_stats()
-        self.stats_updated.emit(stats)
+        snapshot = self._session.read_snapshot()
+        spells = self._spell_payload(snapshot)
+        spell_ids = tuple(item['id'] for item in spells)
+        if spell_ids != self._last_spell_ids:
+            self._last_spell_ids = spell_ids
+            self.spells_changed.emit(spells)
+        self.stats_updated.emit(snapshot.stats, spells)
