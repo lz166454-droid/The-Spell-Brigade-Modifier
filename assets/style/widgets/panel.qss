@@ -88,3 +88,29 @@ QFrame#trainerHeaderDivider {
     margin-left: 4px;
     margin-right: 4px;
 }
+
+QTabWidget#saveEditTabs::pane {
+    border: none;
+    background: transparent;
+    top: -1px;
+}
+
+QTabWidget#saveEditTabs QTabBar::tab {
+    background: transparent;
+    color: {{text_muted}};
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 6px 14px;
+    margin-right: 4px;
+    font: 12px 'Microsoft YaHei UI';
+}
+
+QTabWidget#saveEditTabs QTabBar::tab:selected {
+    color: {{text_primary}};
+    border-bottom: 2px solid {{accent_magic}};
+}
+
+QTabWidget#saveEditTabs QTabBar::tab:hover {
+    color: {{text_primary}};
+    background: {{nav_bg_hover}};
+}

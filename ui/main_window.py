@@ -1,8 +1,7 @@
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QMessageBox, QPushButton, QStackedWidget, QVBoxLayout
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QMessageBox, QStackedWidget, QVBoxLayout
 from qframelesswindow import FramelessWindow
 from ui.i18n import get_language, tr
-from ui.panels import AchievementPanel, CharacterPanel, OverviewPanel, SettingsPanel, TrainerPanel
+from ui.panels import SaveEditPanel, SettingsPanel, TrainerPanel
 from ui.signals import signals
 from ui.theme import apply_theme_style
 from ui.view_models.save_vm import SaveViewModel
@@ -34,19 +33,6 @@ class MainWindow(FramelessWindow):
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, self._TITLE_BAR_TOP_MARGIN, 0, 0)
         outer.setSpacing(0)
-        toolbar = QFrame(self)
-        toolbar.setObjectName('toolbar')
-        toolbar_layout = QHBoxLayout(toolbar)
-        toolbar_layout.setContentsMargins(16, 4, 16, 4)
-        toolbar_layout.setSpacing(8)
-        self._reload_btn = QPushButton(toolbar)
-        self._reload_btn.setObjectName('secondaryBtn')
-        self._apply_btn = QPushButton(toolbar)
-        self._apply_btn.setObjectName('primaryBtn')
-        self._apply_btn.setEnabled(False)
-        toolbar_layout.addStretch(1)
-        toolbar_layout.addWidget(self._reload_btn)
-        toolbar_layout.addWidget(self._apply_btn)
         body = QHBoxLayout()
         body.setContentsMargins(0, 0, 0, 0)
         body.setSpacing(0)
@@ -57,20 +43,14 @@ class MainWindow(FramelessWindow):
         content_layout.setContentsMargins(0, 0, 0, 0)
         content_layout.setSpacing(0)
         self._stack = QStackedWidget(content_wrap)
-        self._overview = OverviewPanel(content_wrap)
-        self._overview.bind(self._vm)
-        self._character = CharacterPanel(content_wrap)
-        self._character.bind(self._vm)
-        self._achievement = AchievementPanel(content_wrap)
-        self._achievement.bind(self._vm)
+        self._save_edit = SaveEditPanel(content_wrap)
+        self._save_edit.bind(self._vm)
         self._settings = SettingsPanel(content_wrap)
         self._settings.bind(self._vm)
         self._trainer = TrainerPanel(content_wrap)
         self._trainer.bind(self._trainer_vm)
         self._pages = {
-            'overview': self._overview,
-            'character': self._character,
-            'achievement': self._achievement,
+            'save': self._save_edit,
             'trainer': self._trainer,
             'settings': self._settings,
         }
@@ -91,19 +71,14 @@ class MainWindow(FramelessWindow):
         self._trainer_status.setObjectName('trainerStatusText')
         status_layout.addWidget(self._status_left, 1)
         status_layout.addWidget(self._trainer_status, 0)
-        outer.addWidget(toolbar)
         outer.addLayout(body, 1)
         outer.addWidget(self._status)
         self.titleBar.raise_()
         self.retranslate_ui()
 
     def retranslate_ui(self) -> None:
-        self._reload_btn.setText(tr('toolbar.reload'))
-        self._apply_btn.setText(tr('toolbar.apply'))
         self._sidebar.retranslate_ui()
-        self._overview.retranslate_ui()
-        self._character.retranslate_ui()
-        self._achievement.retranslate_ui()
+        self._save_edit.retranslate_ui()
         self._settings.retranslate_ui()
         self._trainer.retranslate_ui()
         if hasattr(self.titleBar, 'retranslate_ui'):
@@ -124,8 +99,6 @@ class MainWindow(FramelessWindow):
 
     def _connect_signals(self) -> None:
         self._sidebar.page_switched.connect(self._switch_page)
-        self._reload_btn.clicked.connect(self._on_reload)
-        self._apply_btn.clicked.connect(self._on_apply)
         self._vm.data_ready.connect(self._refresh_panels)
         self._vm.load_failed.connect(self._on_load_failed)
         self._vm.apply_failed.connect(self._on_apply_failed)
@@ -133,7 +106,6 @@ class MainWindow(FramelessWindow):
         self._vm.modify_failed.connect(self._on_modify_failed)
         self._trainer_vm.attach_failed.connect(self._on_trainer_failed)
         self._trainer_vm.attach_succeeded.connect(self._on_trainer_started)
-        signals.save_changed.connect(self._update_apply_button)
         signals.theme_changed.connect(self._on_theme_changed)
         signals.language_changed.connect(self._on_language_changed)
         signals.status_message.connect(self._set_status)
@@ -156,44 +128,14 @@ class MainWindow(FramelessWindow):
             self._sidebar.select_page(page_id)
 
     def _refresh_panels(self) -> None:
-        self._overview.refresh()
-        self._character.refresh()
-        self._achievement.refresh()
+        self._save_edit.refresh()
         self._settings.refresh()
-        self._update_apply_button()
         save_dir = self._vm.save_dir
         slot = self._vm.active_slot
         if save_dir is not None:
             self._last_loaded_slot = slot
             self._last_loaded_path = str(save_dir)
             self._set_status(tr('status.loaded', slot=slot, path=save_dir))
-
-    def _update_apply_button(self) -> None:
-        self._apply_btn.setEnabled(self._vm.has_changes)
-
-    def _on_reload(self) -> None:
-        if self._vm.has_changes:
-            answer = QMessageBox.question(
-                self,
-                tr('dialog.reload.title'),
-                tr('dialog.reload.message'),
-            )
-            if answer != QMessageBox.StandardButton.Yes:
-                return
-        self._vm.reload()
-
-    def _on_apply(self) -> None:
-        if self._vm.is_game_running():
-            answer = QMessageBox.warning(
-                self,
-                tr('dialog.game_running.title'),
-                tr('dialog.game_running.message'),
-                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-                QMessageBox.StandardButton.No,
-            )
-            if answer != QMessageBox.StandardButton.Yes:
-                return
-        self._vm.apply_changes(backup=True)
 
     def _on_load_failed(self, message: str) -> None:
         QMessageBox.critical(self, tr('msg.load_failed'), message)

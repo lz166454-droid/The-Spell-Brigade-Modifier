@@ -13,7 +13,7 @@ class Sidebar(QWidget):
         self.setFixedWidth(160)
         self._group = QButtonGroup(self)
         self._group.setExclusive(True)
-        self._page_ids = ('overview', 'character', 'achievement', 'trainer', 'settings')
+        self._page_ids = ('save', 'trainer', 'settings')
         layout = QVBoxLayout(self)
         layout.setContentsMargins(12, 16, 12, 16)
         layout.setSpacing(8)
@@ -47,7 +47,7 @@ class Sidebar(QWidget):
             self._buttons[page_id] = btn
         layout.addStretch(1)
         self.retranslate_ui()
-        self.select_page('overview')
+        self.select_page('save')
 
     def retranslate_ui(self) -> None:
         self._title.setText(tr('app.name'))
