@@ -22,6 +22,14 @@ _KLASS_MS_ARMOR_ARTIFACT = 'ArtifactStatModifier_DecreaseMovementSpeedPerArmor'
 _KLASS_DMG_ARMOR_ARTIFACT = 'ArtifactStatModifier_IncreaseDamagePerArmor'
 _KLASS_CRIT_ON_ATTACK = 'IncreaseCriticalDamageOnAttack'
 _STAT_ARMOR = 14
+_PANEL_DYNAMIC_MODIFIERS = frozenset({
+    _KLASS_CRIT_ON_ATTACK,
+    _KLASS_DMG_ARMOR_ARTIFACT,
+    _KLASS_LUCK_ARTIFACT,
+})
+
+def _is_panel_dynamic_modifier(name: str) -> bool:
+    return name in _PANEL_DYNAMIC_MODIFIERS
 
 @dataclass(frozen=True)
 class StatCalcContext:
@@ -100,6 +108,7 @@ def sum_modifiers(
     *,
     non_starting_only: bool = False,
     exclude_hidden: bool = True,
+    exclude_panel_dynamic: bool = False,
 ) -> float:
     total = 0.0
     if is_user_ptr(modifiers_ptr):
@@ -115,6 +124,8 @@ def sum_modifiers(
         if exclude_hidden and name == _KLASS_HIDDEN:
             continue
         if non_starting_only and name == _KLASS_STARTING:
+            continue
+        if exclude_panel_dynamic and _is_panel_dynamic_modifier(name):
             continue
         total += read_modifier_get_value(mem, modifier_ptr, ctx)
     return total
@@ -178,7 +189,7 @@ def read_stat_display_value(
         modifiers_ptr = mem.read_u64(stat_ptr + off.STAT_MODIFIERS)
         if calc_type == STAT_CALC_FLAT:
             return _read_numeric_display_value(mem, stat_ptr, ctx)
-        return sum_modifiers(mem, modifiers_ptr, ctx, exclude_hidden=True)
+        return sum_modifiers(mem, modifiers_ptr, ctx, exclude_hidden=True, exclude_panel_dynamic=True)
     return _read_numeric_display_value(mem, stat_ptr, ctx)
 
 def write_stat_base_value(mem: ProcessMemory, stat_ptr: int, value: float) -> bool:
@@ -235,7 +246,7 @@ def _scan_modifiers_for_write(
             continue
         if _modifier_is_adjustable(name):
             adjustable.append(modifier_ptr)
-        else:
+        elif not _is_panel_dynamic_modifier(name):
             fixed_sum += read_modifier_get_value(mem, modifier_ptr, ctx)
     return fixed_sum, adjustable
 
