@@ -75,6 +75,10 @@ class ProcessMemory:
         data = self.read(address, 4)
         return struct.unpack('<I', data)[0] if data else 0
 
+    def read_i32(self, address: int) -> int:
+        data = self.read(address, 4)
+        return struct.unpack('<i', data)[0] if data else 0
+
     def read_u8(self, address: int) -> int:
         data = self.read(address, 1)
         return data[0] if data else 0

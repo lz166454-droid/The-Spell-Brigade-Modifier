@@ -34,46 +34,75 @@ class TrainerViewModel(QObject):
             self._session.detach()
         self._connect_session()
 
+    def _fail(self, message: str, exc: BaseException | None = None) -> None:
+        from lab.trainer.diag import log_error, log_exception
+        if exc is not None:
+            log_exception(message, exc)
+            detail = f'{message}: {exc}'
+        else:
+            log_error(message)
+            detail = message
+        self.attach_failed.emit(detail)
+
     def _connect_session(self) -> None:
         self._last_spell_ids = ()
         try:
             self._session.attach()
         except Exception as exc:
-            self.attach_failed.emit(str(exc))
+            self._fail('附加失败', exc)
             return
         self._timer.start()
         self.attach_succeeded.emit()
-        self._emit_snapshot()
+        try:
+            self._emit_snapshot()
+        except Exception as exc:
+            self._timer.stop()
+            if self._session.attached:
+                self._session.detach()
+            self._fail('读取属性失败', exc)
+            return
         QTimer.singleShot(300, self._deferred_attach_refresh)
 
     def _deferred_attach_refresh(self) -> None:
         if not self._session.attached:
             return
         self._session.refresh_handles()
-        self._emit_snapshot()
+        try:
+            self._emit_snapshot()
+        except Exception as exc:
+            self._fail('延迟刷新属性失败', exc)
 
     def apply_stat(self, key: str, value: float, spell_id: int | None = None) -> None:
         if not self._session.attached:
             return
-        if not self._session.write_stat(key, value, spell_id=spell_id):
+        try:
+            ok = self._session.write_stat(key, value, spell_id=spell_id)
+        except Exception as exc:
             target = f'{key}#{spell_id}' if spell_id is not None else key
-            self.attach_failed.emit(f'写入属性失败: {target}')
+            self._fail(f'写入属性失败: {target}', exc)
             return
-        self._emit_snapshot()
+        if not ok:
+            target = f'{key}#{spell_id}' if spell_id is not None else key
+            self._fail(f'写入属性失败: {target}')
+            return
+        try:
+            self._emit_snapshot()
+        except Exception as exc:
+            self._fail('写入后刷新属性失败', exc)
 
     @Slot(bool)
     def set_invincible_mode(self, enabled: bool) -> None:
         if not self._session.attached:
             return
         if not self._session.set_invincible_mode(enabled):
-            self.attach_failed.emit('无法设置无敌模式（生命容器未就绪）')
+            self._fail('无法设置无敌模式（生命容器未就绪）')
 
     @Slot(bool)
     def set_super_attack(self, enabled: bool) -> None:
         if not self._session.attached:
             return
         if not self._session.set_super_attack(enabled):
-            self.attach_failed.emit('无法设置超级攻击（未找到已装备咒语）')
+            self._fail('无法设置超级攻击（未找到已装备咒语）')
 
     def _on_tick(self) -> None:
         if not self._session.attached:
@@ -81,11 +110,19 @@ class TrainerViewModel(QObject):
             return
         if not self._session.refresh_handles():
             return
-        self._emit_snapshot()
+        try:
+            self._emit_snapshot()
+        except Exception as exc:
+            self._fail('定时刷新属性失败', exc)
 
     def _spell_payload(self, snapshot) -> list[dict]:
         return [
-            {'id': spell.id, 'name': spell.name, 'stats': spell.stats}
+            {
+                'id': spell.id,
+                'spell_type': spell.spell_type_id,
+                'name': spell.name,
+                'stats': spell.stats,
+            }
             for spell in snapshot.spells
         ]
 

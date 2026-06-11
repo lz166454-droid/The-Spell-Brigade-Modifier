@@ -1,11 +1,13 @@
 from dataclasses import dataclass
 from lab.trainer import offsets as off
 from lab.trainer.memory import ProcessMemory, is_user_ptr
+from lab.trainer.spell_names import spell_display_name
 from lab.trainer.stat_calc import find_stat_by_type, read_stat_display_value, write_stat_display_value
 
 @dataclass(frozen=True)
 class SpellHandle:
     spell_id: int
+    spell_type_id: int
     spell_attrs_ptr: int
     stats_list_ptr: int
     name: str
@@ -38,11 +40,13 @@ def list_equipped_spells(mem: ProcessMemory, player_stats_ptr: int) -> list[Spel
         stats_list_ptr = mem.read_u64(spell_attrs_ptr + off.SPELL_ATTRIBUTES_STATS)
         if not is_user_ptr(stats_list_ptr):
             continue
+        spell_type_id = mem.read_i32(spell_attrs_ptr + off.SPELL_ATTRIBUTES_SPELL_TYPE)
         spells.append(SpellHandle(
             spell_id=spell_id,
+            spell_type_id=spell_type_id,
             spell_attrs_ptr=spell_attrs_ptr,
             stats_list_ptr=stats_list_ptr,
-            name=str(spell_id),
+            name=spell_display_name(spell_type_id),
         ))
     spells.sort(key=lambda item: item.spell_id)
     return spells

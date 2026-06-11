@@ -22,7 +22,7 @@ def cmd_stats(_args: argparse.Namespace) -> int:
         for key, value in snapshot.stats.items():
             print(f'{key}: {value}')
         for spell in snapshot.spells:
-            print(f'[spell #{spell.id}]')
+            print(f'[{spell.name} #{spell.id}]')
             for key, value in spell.stats.items():
                 print(f'  {key}: {value}')
     except Exception as exc:

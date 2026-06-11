@@ -13,6 +13,7 @@ from lab.trainer.stats_meta import BASIC_STATS, HIDDEN_STATS, SPELL_STATS, SPELL
 @dataclass
 class SpellSnapshot:
     id: int
+    spell_type_id: int
     name: str
     stats: dict[str, float]
 
@@ -66,7 +67,7 @@ class TrainerSession:
                 log(f'  {item.key}: {snapshot.stats[item.key]}')
         log(f'已装备咒语 {len(snapshot.spells)} 个')
         for spell in snapshot.spells:
-            log(f'  spell #{spell.id}: {spell.stats}')
+            log(f'  {spell.name} (#{spell.id}): {spell.stats}')
         log('附加成功')
 
     def detach(self) -> None:
@@ -121,7 +122,12 @@ class TrainerSession:
                 value = read_panel_stat(self._mem, self._handles, item, ctx, spell_id=handle.spell_id)
                 if value is not None:
                     spell_stats[item.key] = self._round_stat(item, value)
-            spells.append(SpellSnapshot(id=handle.spell_id, name=handle.name, stats=spell_stats))
+            spells.append(SpellSnapshot(
+                id=handle.spell_id,
+                spell_type_id=handle.spell_type_id,
+                name=handle.name,
+                stats=spell_stats,
+            ))
         return TrainerSnapshot(stats=stats, spells=spells)
 
     def read_all_stats(self) -> dict[str, float]:

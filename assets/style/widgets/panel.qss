@@ -89,6 +89,15 @@ QFrame#trainerHeaderDivider {
     margin-right: 4px;
 }
 
+QFrame#trainerColumnDivider {
+    background: {{border_subtle}};
+    border: none;
+    min-width: 1px;
+    max-width: 1px;
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
 QTabWidget#saveEditTabs::pane,
 QTabWidget#trainerTabs::pane {
     border: none;
