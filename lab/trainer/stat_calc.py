@@ -22,14 +22,14 @@ _KLASS_MS_ARMOR_ARTIFACT = 'ArtifactStatModifier_DecreaseMovementSpeedPerArmor'
 _KLASS_DMG_ARMOR_ARTIFACT = 'ArtifactStatModifier_IncreaseDamagePerArmor'
 _KLASS_CRIT_ON_ATTACK = 'IncreaseCriticalDamageOnAttack'
 _STAT_ARMOR = 14
-_PANEL_DYNAMIC_MODIFIERS = frozenset({
+_PANEL_DYNAMIC_MARKERS = (
     _KLASS_CRIT_ON_ATTACK,
     _KLASS_DMG_ARMOR_ARTIFACT,
     _KLASS_LUCK_ARTIFACT,
-})
+)
 
 def _is_panel_dynamic_modifier(name: str) -> bool:
-    return name in _PANEL_DYNAMIC_MODIFIERS
+    return any(marker in name for marker in _PANEL_DYNAMIC_MARKERS)
 
 @dataclass(frozen=True)
 class StatCalcContext:
@@ -109,6 +109,7 @@ def sum_modifiers(
     non_starting_only: bool = False,
     exclude_hidden: bool = True,
     exclude_panel_dynamic: bool = False,
+    positive_only: bool = False,
 ) -> float:
     total = 0.0
     if is_user_ptr(modifiers_ptr):
@@ -127,8 +128,14 @@ def sum_modifiers(
             continue
         if exclude_panel_dynamic and _is_panel_dynamic_modifier(name):
             continue
-        total += read_modifier_get_value(mem, modifier_ptr, ctx)
+        value = read_modifier_get_value(mem, modifier_ptr, ctx)
+        if positive_only and value <= 0.0:
+            continue
+        total += value
     return total
+
+def sum_positive_modifiers(mem: ProcessMemory, modifiers_ptr: int, ctx: StatCalcContext | None = None) -> float:
+    return sum_modifiers(mem, modifiers_ptr, ctx, exclude_hidden=False, positive_only=True)
 
 def calculate_display_value(base_value: float, modifier_sum: float, calc_type: int) -> float:
     if calc_type == STAT_CALC_FLAT:
@@ -172,6 +179,13 @@ def _read_numeric_display_value(mem: ProcessMemory, stat_ptr: int, ctx: StatCalc
     modifier_sum = sum_modifiers(mem, modifiers_ptr, ctx)
     return calculate_display_value(base_value, modifier_sum, calc_type)
 
+def _read_panel_stable_numeric_display_value(mem: ProcessMemory, stat_ptr: int, ctx: StatCalcContext | None) -> float:
+    base_value = mem.read_f32(stat_ptr + off.STAT_BASE_VALUE)
+    calc_type = mem.read_u32(stat_ptr + off.STAT_CALCULATION_TYPE)
+    modifiers_ptr = mem.read_u64(stat_ptr + off.STAT_MODIFIERS)
+    modifier_sum = sum_modifiers(mem, modifiers_ptr, ctx, exclude_panel_dynamic=True)
+    return calculate_display_value(base_value, modifier_sum, calc_type)
+
 def read_stat_display_value(
     mem: ProcessMemory,
     stat_ptr: int,
@@ -188,8 +202,8 @@ def read_stat_display_value(
         calc_type = mem.read_u32(stat_ptr + off.STAT_CALCULATION_TYPE)
         modifiers_ptr = mem.read_u64(stat_ptr + off.STAT_MODIFIERS)
         if calc_type == STAT_CALC_FLAT:
-            return _read_numeric_display_value(mem, stat_ptr, ctx)
-        return sum_modifiers(mem, modifiers_ptr, ctx, exclude_hidden=True, exclude_panel_dynamic=True)
+            return _read_panel_stable_numeric_display_value(mem, stat_ptr, ctx)
+        return sum_modifiers(mem, modifiers_ptr, ctx, exclude_hidden=False, exclude_panel_dynamic=True)
     return _read_numeric_display_value(mem, stat_ptr, ctx)
 
 def write_stat_base_value(mem: ProcessMemory, stat_ptr: int, value: float) -> bool:
@@ -302,7 +316,7 @@ def write_stat_panel_value(
         calc_type = mem.read_u32(stat_ptr + off.STAT_CALCULATION_TYPE)
         if calc_type == STAT_CALC_FLAT:
             return write_flat_panel_value(mem, stat_ptr, target, ctx)
-        return write_modifier_sum_panel_value(mem, stat_ptr, target, ctx, exclude_hidden=True)
+        return write_modifier_sum_panel_value(mem, stat_ptr, target, ctx, exclude_hidden=False)
     calc_type = mem.read_u32(stat_ptr + off.STAT_CALCULATION_TYPE)
     if calc_type == STAT_CALC_FLAT:
         return write_flat_panel_value(mem, stat_ptr, target, ctx)

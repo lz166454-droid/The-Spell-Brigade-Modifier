@@ -3,7 +3,8 @@ from lab.trainer import offsets as off
 from lab.trainer.il2cpp_layout import read_list_item, read_list_size, read_network_variable_float
 from lab.trainer.memory import ProcessMemory, is_user_ptr
 from lab.trainer.spell_stats import spell_stat_ptr
-from lab.trainer.stat_calc import StatCalcContext, find_stat_by_type, read_stat_display_value
+from lab.trainer.stat_calc import StatCalcContext, find_stat_by_type, read_stat_display_value, sum_positive_modifiers
+from lab.trainer import offsets as off
 
 @dataclass
 class PlayerHandles:
@@ -152,6 +153,9 @@ def read_panel_stat(
     stat_ptr = find_stat_by_type(mem, handles.stats_list_ptr, item.stat_type)
     if not stat_ptr:
         return None
+    if item.panel_positive_modifiers_only:
+        modifiers_ptr = mem.read_u64(stat_ptr + off.STAT_MODIFIERS)
+        return sum_positive_modifiers(mem, modifiers_ptr, ctx)
     return read_stat_display_value(mem, stat_ptr, ctx, display_type=item.display_type)
 
 def read_character_stats(mem: ProcessMemory, handles: PlayerHandles, stat_defs: tuple) -> dict[str, float]:

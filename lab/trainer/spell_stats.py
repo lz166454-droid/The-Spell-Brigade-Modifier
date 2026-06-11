@@ -64,6 +64,8 @@ def _read_char_spell_mod_sum(
     mem: ProcessMemory,
     ctx: StatCalcContext,
     char_stat_type: int,
+    *,
+    exclude_panel_dynamic: bool = False,
 ) -> float:
     if not is_user_ptr(ctx.stats_list_ptr):
         return 0.0
@@ -71,7 +73,13 @@ def _read_char_spell_mod_sum(
     if not stat_ptr:
         return 0.0
     modifiers_ptr = mem.read_u64(stat_ptr + off.STAT_MODIFIERS)
-    return sum_modifiers(mem, modifiers_ptr, ctx, exclude_hidden=True)
+    return sum_modifiers(
+        mem,
+        modifiers_ptr,
+        ctx,
+        exclude_hidden=False,
+        exclude_panel_dynamic=exclude_panel_dynamic,
+    )
 
 def _combined_mod_sum_for_panel(base: float, panel_target: float, calc_type: int) -> float:
     if calc_type == STAT_CALC_FLAT:
@@ -100,7 +108,7 @@ def _read_spell_stat_panel_value(
     if char_stat_type is not None:
         base_value = mem.read_f32(stat_ptr + off.STAT_BASE_VALUE)
         modifiers_ptr = mem.read_u64(stat_ptr + off.STAT_MODIFIERS)
-        spell_mod = sum_modifiers(mem, modifiers_ptr, ctx)
+        spell_mod = sum_modifiers(mem, modifiers_ptr, ctx, exclude_hidden=False)
         char_mod = _read_char_spell_mod_sum(mem, ctx, char_stat_type)
         return calculate_display_value(base_value, spell_mod + char_mod, calc_type)
     display_type = infer_spell_stat_display_type(stat_type, calc_type)
@@ -122,7 +130,7 @@ def _write_spell_stat_panel_value(
         spell_mod_target = combined_mod - char_mod
         if calc_type == STAT_CALC_FLAT:
             return write_flat_panel_value(mem, stat_ptr, base_value + spell_mod_target, ctx)
-        return write_modifier_sum_panel_value(mem, stat_ptr, spell_mod_target, ctx, exclude_hidden=True)
+        return write_modifier_sum_panel_value(mem, stat_ptr, spell_mod_target, ctx, exclude_hidden=False)
     display_type = infer_spell_stat_display_type(stat_type, calc_type)
     return write_stat_panel_value(mem, stat_ptr, panel_value, ctx, display_type=display_type)
 

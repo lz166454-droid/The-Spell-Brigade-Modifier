@@ -8,6 +8,7 @@ class CharacterStatDef:
     decimals: int = 1
     display_type: str = DISPLAY_VALUE
     panel_source: str = 'character'
+    panel_positive_modifiers_only: bool = False
 
 BASIC_STATS: tuple[CharacterStatDef, ...] = (
     CharacterStatDef(8, 'max_health', 0),
@@ -20,7 +21,7 @@ BASIC_STATS: tuple[CharacterStatDef, ...] = (
     CharacterStatDef(11, 'pickup_radius', 0, display_type=DISPLAY_VALUE_PERCENT),
     CharacterStatDef(10, 'xp_gain', 0, display_type=DISPLAY_VALUE_PERCENT),
     CharacterStatDef(9, 'luck', 0),
-    CharacterStatDef(0, 'char_spell_damage', 0, display_type=DISPLAY_VALUE_PERCENT),
+    CharacterStatDef(0, 'char_spell_damage', 1, display_type=DISPLAY_VALUE_PERCENT, panel_positive_modifiers_only=True),
     CharacterStatDef(6, 'char_spell_range', 0, display_type=DISPLAY_VALUE_PERCENT),
     CharacterStatDef(2, 'char_spell_fire_rate', 0, display_type=DISPLAY_VALUE_PERCENT),
 )
