@@ -19,6 +19,8 @@
   "status.trainer_active": "启动完成",
   "status.theme_light": "已切换为浅色主题",
   "status.theme_dark": "已切换为深色主题",
+  "status.language_zh": "已切换为简体中文",
+  "status.language_en": "Switched to English",
   "dialog.reload.title": "重新加载",
   "dialog.reload.message": "当前有未应用的修改，重新加载将丢弃这些更改。是否继续？",
   "dialog.game_running.title": "游戏正在运行",

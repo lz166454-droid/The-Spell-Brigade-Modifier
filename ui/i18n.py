@@ -43,6 +43,12 @@ def get_language() -> str:
     _sync_game_locale(_current_language)
     return _current_language
 
+def toggle_language() -> str:
+    current = get_language()
+    next_lang = 'en' if current == 'zh-CN' else 'zh-CN'
+    set_language(next_lang)
+    return next_lang
+
 def set_language(lang: str, *, emit: bool = True) -> None:
     global _current_language
     normalized = lang if lang in SUPPORTED_LANGUAGES else DEFAULT_LANGUAGE

@@ -1,14 +1,13 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QMessageBox, QPushButton, QStackedWidget, QVBoxLayout
 from qframelesswindow import FramelessWindow
-from ui.i18n import LANGUAGE_LABEL_KEYS, get_language, set_language, tr
+from ui.i18n import get_language, tr
 from ui.panels import AchievementPanel, CharacterPanel, OverviewPanel, SettingsPanel, TrainerPanel
 from ui.signals import signals
 from ui.theme import apply_theme_style
 from ui.view_models.save_vm import SaveViewModel
 from ui.view_models.trainer_vm import TrainerViewModel
 from ui.widgets.sidebar import Sidebar
-from ui.widgets.toolbar_combo import ToolbarComboBox
 from ui.widgets.title_bar import CustomTitleBar
 
 class MainWindow(FramelessWindow):
@@ -45,13 +44,7 @@ class MainWindow(FramelessWindow):
         self._apply_btn = QPushButton(toolbar)
         self._apply_btn.setObjectName('primaryBtn')
         self._apply_btn.setEnabled(False)
-        self._language = ToolbarComboBox(toolbar)
-        self._language.setObjectName('toolbarCombo')
-        self._language.setFixedHeight(24)
-        self._language.setSizeAdjustPolicy(ToolbarComboBox.SizeAdjustPolicy.AdjustToContents)
-        self._language.currentIndexChanged.connect(self._on_language_combo_changed)
         toolbar_layout.addStretch(1)
-        toolbar_layout.addWidget(self._language)
         toolbar_layout.addWidget(self._reload_btn)
         toolbar_layout.addWidget(self._apply_btn)
         body = QHBoxLayout()
@@ -107,7 +100,6 @@ class MainWindow(FramelessWindow):
     def retranslate_ui(self) -> None:
         self._reload_btn.setText(tr('toolbar.reload'))
         self._apply_btn.setText(tr('toolbar.apply'))
-        self._refresh_language_combo()
         self._sidebar.retranslate_ui()
         self._overview.retranslate_ui()
         self._character.retranslate_ui()
@@ -121,23 +113,6 @@ class MainWindow(FramelessWindow):
             self._status_left.setText(tr('status.loaded', slot=self._last_loaded_slot, path=self._last_loaded_path))
         else:
             self._status_left.setText(tr('status.ready'))
-
-    def _refresh_language_combo(self) -> None:
-        self._language.blockSignals(True)
-        current = get_language()
-        self._language.clear()
-        for code, key in LANGUAGE_LABEL_KEYS:
-            self._language.addItem(tr(key), code)
-        index = self._language.findData(current)
-        if index < 0:
-            index = 0
-        self._language.setCurrentIndex(index)
-        self._language.blockSignals(False)
-
-    def _on_language_combo_changed(self, index: int) -> None:
-        lang = self._language.itemData(index)
-        if lang and lang != get_language():
-            set_language(lang)
 
     def showEvent(self, event) -> None:
         super().showEvent(event)

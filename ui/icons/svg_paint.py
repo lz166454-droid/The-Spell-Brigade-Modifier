@@ -4,7 +4,7 @@ from PySide6.QtGui import QPainter
 from PySide6.QtSvg import QSvgRenderer
 from PySide6.QtXml import QDomDocument
 
-_FILL_TAGS = ('path', 'circle', 'rect', 'polygon')
+_FILL_TAGS = ('path', 'circle', 'rect', 'polygon', 'text')
 _STROKE_TAGS = ('path', 'line', 'polyline', 'circle', 'rect', 'polygon')
 _SKIP_FILL = frozenset(('none', 'transparent'))
 

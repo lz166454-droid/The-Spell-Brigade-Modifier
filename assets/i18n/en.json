@@ -19,6 +19,8 @@
   "status.trainer_active": "Mod started",
   "status.theme_light": "Switched to light theme",
   "status.theme_dark": "Switched to dark theme",
+  "status.language_zh": "已切换为简体中文",
+  "status.language_en": "Switched to English",
   "dialog.reload.title": "Reload",
   "dialog.reload.message": "You have unapplied changes. Reloading will discard them. Continue?",
   "dialog.game_running.title": "Game Running",

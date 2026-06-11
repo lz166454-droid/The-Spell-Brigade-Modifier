@@ -39,7 +39,8 @@
     qproperty-pressedBackgroundColor: #f1707a;
 }
 
-#titleBarThemeBtn {
+#titleBarThemeBtn,
+#titleBarLanguageBtn {
     qproperty-normalColor: {{title_btn_normal}};
     qproperty-hoverColor: {{title_btn_normal}};
     qproperty-pressedColor: {{title_btn_normal}};
@@ -51,7 +52,8 @@
 #maxBtn:focus,
 #minBtn:focus,
 #closeBtn:focus,
-#titleBarThemeBtn:focus {
+#titleBarThemeBtn:focus,
+#titleBarLanguageBtn:focus {
     outline: none;
 }
 
