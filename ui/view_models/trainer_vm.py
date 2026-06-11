@@ -13,7 +13,7 @@ class TrainerViewModel(QObject):
         self._timer = QTimer(self)
         self._timer.setInterval(800)
         self._timer.timeout.connect(self._on_tick)
-        self._last_spell_ids: tuple[int, ...] = ()
+        self._last_spell_signature: tuple[tuple[int, tuple[str, ...]], ...] = ()
 
     @property
     def attached(self) -> bool:
@@ -45,7 +45,7 @@ class TrainerViewModel(QObject):
         self.attach_failed.emit(detail)
 
     def _connect_session(self) -> None:
-        self._last_spell_ids = ()
+        self._last_spell_signature = ()
         try:
             self._session.attach()
         except Exception as exc:
@@ -116,21 +116,29 @@ class TrainerViewModel(QObject):
             self._fail('定时刷新属性失败', exc)
 
     def _spell_payload(self, snapshot) -> list[dict]:
-        return [
-            {
+        spells = []
+        for spell in snapshot.spells:
+            stat_fields = [
+                {
+                    'key': field.key,
+                    'label_key': field.label_key,
+                    'decimals': field.decimals,
+                }
+                for field in spell.stat_fields
+            ]
+            spells.append({
                 'id': spell.id,
-                'spell_type': spell.spell_type_id,
                 'name': spell.name,
                 'stats': spell.stats,
-            }
-            for spell in snapshot.spells
-        ]
+                'stat_fields': stat_fields,
+            })
+        return spells
 
     def _emit_snapshot(self) -> None:
         snapshot = self._session.read_snapshot()
         spells = self._spell_payload(snapshot)
-        spell_ids = tuple(item['id'] for item in spells)
-        if spell_ids != self._last_spell_ids:
-            self._last_spell_ids = spell_ids
+        spell_signature = tuple((item['id'], tuple(field['key'] for field in item['stat_fields'])) for item in spells)
+        if spell_signature != self._last_spell_signature:
+            self._last_spell_signature = spell_signature
             self.spells_changed.emit(spells)
         self.stats_updated.emit(snapshot.stats, spells)

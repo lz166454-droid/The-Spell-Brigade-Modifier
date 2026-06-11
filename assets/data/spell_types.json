@@ -1,130 +1,25 @@
 {
   "types": [
-    {
-      "id": 0,
-      "key": "Arrow",
-      "name_en": "Aurora Wings",
-      "name_zh": "极光之翼"
-    },
-    {
-      "id": 1,
-      "key": "Beam",
-      "name_en": "Aether Beam",
-      "name_zh": "以太光束"
-    },
-    {
-      "id": 2,
-      "key": "Bell",
-      "name_en": "Bell March",
-      "name_zh": "铃铛进行曲"
-    },
-    {
-      "id": 3,
-      "key": "BombLauncher",
-      "name_en": "Hex Bomb",
-      "name_zh": "巫术炸弹"
-    },
-    {
-      "id": 4,
-      "key": "Book",
-      "name_en": "Swirl Sickle",
-      "name_zh": "旋镰"
-    },
-    {
-      "id": 5,
-      "key": "Boomerang",
-      "name_en": "Moonerang",
-      "name_zh": "崭月回旋镖"
-    },
-    {
-      "id": 6,
-      "key": "EnergyZone",
-      "name_en": "Necro Whirl",
-      "name_zh": "亡灵旋风"
-    },
-    {
-      "id": 7,
-      "key": "FallingStar",
-      "name_en": "Falling Stars",
-      "name_zh": "流星"
-    },
-    {
-      "id": 8,
-      "key": "Fence",
-      "name_en": "Scepter Mesh",
-      "name_zh": "权杖网格"
-    },
-    {
-      "id": 9,
-      "key": "Laser",
-      "name_en": "Arcane Broadsword",
-      "name_zh": "奥术阔剑"
-    },
-    {
-      "id": 10,
-      "key": "Meteor",
-      "name_en": "Spear Barrage",
-      "name_zh": "枪雨"
-    },
-    {
-      "id": 11,
-      "key": "Mine",
-      "name_en": "Chthonic Charge",
-      "name_zh": "冥界地雷"
-    },
-    {
-      "id": 12,
-      "key": "Orb",
-      "name_en": "Astral Orbs",
-      "name_zh": "星体法球"
-    },
-    {
-      "id": 13,
-      "key": "Plant",
-      "name_en": "Vengeful Sprout",
-      "name_zh": "复仇幼芽"
-    },
-    {
-      "id": 14,
-      "key": "Proximity",
-      "name_en": "Solar Pulse",
-      "name_zh": "太阳脉冲"
-    },
-    {
-      "id": 15,
-      "key": "Rifle",
-      "name_en": "Magic Missile",
-      "name_zh": "魔法飞弹"
-    },
-    {
-      "id": 16,
-      "key": "Shotgun",
-      "name_en": "Phantom Blades",
-      "name_zh": "幻影之刃"
-    },
-    {
-      "id": 17,
-      "key": "Slash",
-      "name_en": "Talon Slash",
-      "name_zh": "鹰爪斩击"
-    },
-    {
-      "id": 18,
-      "key": "Smg",
-      "name_en": "Cardinal Runes",
-      "name_zh": "符文爆裂"
-    },
-    {
-      "id": 19,
-      "key": "Summon",
-      "name_en": "Impish Havoc",
-      "name_zh": "小鬼浩劫"
-    },
-    {
-      "id": 20,
-      "key": "Trail",
-      "name_en": "Rocky Road",
-      "name_zh": "岩石路"
-    }
+    {"id": 0, "key": "Orb", "name_en": "Astral Orbs", "name_zh": "星体法球"},
+    {"id": 1, "key": "Boomerang", "name_en": "Moonerang", "name_zh": "崭月回旋镖"},
+    {"id": 2, "key": "EnergyZone", "name_en": "Necro Whirl", "name_zh": "亡灵旋风"},
+    {"id": 3, "key": "Laser", "name_en": "Arcane Broadsword", "name_zh": "奥术阔剑"},
+    {"id": 4, "key": "Proximity", "name_en": "Solar Pulse", "name_zh": "太阳脉冲"},
+    {"id": 5, "key": "Shotgun", "name_en": "Phantom Blades", "name_zh": "幻影之刃"},
+    {"id": 6, "key": "Rifle", "name_en": "Magic Missile", "name_zh": "魔法飞弹"},
+    {"id": 7, "key": "Smg", "name_en": "Cardinal Runes", "name_zh": "符文爆裂"},
+    {"id": 8, "key": "Trail", "name_en": "Rocky Road", "name_zh": "岩石路"},
+    {"id": 9, "key": "BombLauncher", "name_en": "Hex Bomb", "name_zh": "巫术炸弹"},
+    {"id": 10, "key": "FallingStar", "name_en": "Falling Stars", "name_zh": "流星"},
+    {"id": 11, "key": "Mine", "name_en": "Chthonic Charge", "name_zh": "冥界地雷"},
+    {"id": 12, "key": "Fence", "name_en": "Scepter Mesh", "name_zh": "权杖网格"},
+    {"id": 13, "key": "Beam", "name_en": "Aether Beam", "name_zh": "以太光束"},
+    {"id": 14, "key": "Arrow", "name_en": "Aurora Wings", "name_zh": "极光之翼"},
+    {"id": 15, "key": "Plant", "name_en": "Vengeful Sprout", "name_zh": "复仇幼芽"},
+    {"id": 16, "key": "Summon", "name_en": "Impish Havoc", "name_zh": "小鬼浩劫"},
+    {"id": 17, "key": "Slash", "name_en": "Talon Slash", "name_zh": "鹰爪斩击"},
+    {"id": 18, "key": "Meteor", "name_en": "Spear Barrage", "name_zh": "枪雨"},
+    {"id": 19, "key": "Book", "name_en": "Swirl Sickle", "name_zh": "旋镰"},
+    {"id": 20, "key": "Bell", "name_en": "Bell March", "name_zh": "铃铛进行曲"}
   ]
 }

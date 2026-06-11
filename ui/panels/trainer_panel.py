@@ -3,8 +3,7 @@ from PySide6.QtWidgets import (
     QApplication, QCheckBox, QDoubleSpinBox, QFrame, QGridLayout, QHBoxLayout, QLabel,
     QPushButton, QScrollArea, QSizePolicy, QTabWidget, QVBoxLayout, QWidget,
 )
-from lab.trainer.stats_meta import BASIC_STATS, HIDDEN_STATS, SPELL_STATS
-from lab.trainer.spell_names import spell_display_name
+from lab.trainer.stats_meta import BASIC_STATS, HIDDEN_STATS
 from ui.i18n import get_language, stat_label, trainer_tab_label, tr
 from ui.view_models.trainer_vm import TrainerViewModel
 
@@ -52,7 +51,8 @@ class TrainerPanel(QWidget):
         self._spell_spins: dict[tuple[int, str], TrainerCommitSpinBox] = {}
         self._spell_labels: dict[tuple[int, str], QLabel] = {}
         self._spell_tab_spell_ids: list[int] = []
-        self._spell_types: dict[int, int] = {}
+        self._spell_tab_names: dict[int, str] = {}
+        self._spell_label_keys: dict[tuple[int, str], str] = {}
         self._basic_section_title: QLabel | None = None
         self._hidden_section_title: QLabel | None = None
         root = QVBoxLayout(self)
@@ -233,25 +233,72 @@ class TrainerPanel(QWidget):
         self._spell_spins.clear()
         self._spell_labels.clear()
         self._spell_tab_spell_ids.clear()
-        self._spell_types.clear()
+        self._spell_tab_names.clear()
+        self._spell_label_keys.clear()
         restore_index = 0
-        lang = get_language()
         for index, spell in enumerate(spells):
             spell_id = int(spell['id'])
-            spell_type = int(spell.get('spell_type', spell_id))
-            self._spell_types[spell_id] = spell_type
-            display_name = spell_display_name(spell_type, lang)
-            tab_body, spins, labels = self._make_stats_grid(SPELL_STATS, spell_id=spell_id)
+            display_name = str(spell.get('name', spell_id))
+            self._spell_tab_names[spell_id] = display_name
+            stat_fields = spell.get('stat_fields', [])
+            tab_body, spins, labels = self._make_dynamic_stats_grid(stat_fields, spell_id=spell_id)
             self._tabs.addTab(self._make_tab_page(tab_body), trainer_tab_label('spell', name=display_name))
             self._spell_tab_spell_ids.append(spell_id)
             for key, spin in spins.items():
                 self._spell_spins[(spell_id, key)] = spin
             for key, label in labels.items():
                 self._spell_labels[(spell_id, key)] = label
+            for field in stat_fields:
+                field_key = field['key']
+                self._spell_label_keys[(spell_id, field_key)] = field['label_key']
             if preserve_id is not None and spell_id == preserve_id:
                 restore_index = 1 + index
         if preserve_id is not None and self._tabs.count() > restore_index:
             self._tabs.setCurrentIndex(restore_index)
+
+    def _make_dynamic_stats_grid(
+        self,
+        stat_fields: list[dict],
+        *,
+        spell_id: int,
+    ) -> tuple[QWidget, dict[str, TrainerCommitSpinBox], dict[str, QLabel]]:
+        body = QWidget()
+        body.setObjectName('panelScrollContent')
+        body.setAutoFillBackground(False)
+        body.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Expanding)
+        layout = QGridLayout(body)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setHorizontalSpacing(6)
+        layout.setVerticalSpacing(4)
+        layout.setColumnStretch(0, 0)
+        layout.setColumnStretch(1, 0)
+        layout.setColumnStretch(2, 1)
+        spins: dict[str, TrainerCommitSpinBox] = {}
+        labels: dict[str, QLabel] = {}
+        for row, field in enumerate(stat_fields):
+            key = field['key']
+            label_key = field['label_key']
+            decimals = int(field.get('decimals', 2))
+            label = QLabel(body)
+            label.setObjectName('fieldLabel')
+            label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+            label.setText(stat_label(label_key))
+            spin = TrainerCommitSpinBox(body)
+            spin.setObjectName('trainerStatSpin')
+            spin.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+            spin.setFixedWidth(112)
+            spin.setRange(-99999, 999999)
+            spin.setDecimals(decimals)
+            spin.setButtonSymbols(QDoubleSpinBox.ButtonSymbols.NoButtons)
+            spin.setProperty('stat_key', key)
+            spin.setProperty('spell_id', spell_id)
+            spin.value_committed.connect(self._on_stat_committed)
+            layout.addWidget(label, row, 0)
+            layout.addWidget(spin, row, 1, Qt.AlignmentFlag.AlignLeft)
+            labels[key] = label
+            spins[key] = spin
+        layout.setRowStretch(len(stat_fields), 1)
+        return body, spins, labels
 
     def retranslate_ui(self) -> None:
         self._start_btn.setText(tr('toolbar.start_trainer'))
@@ -269,11 +316,11 @@ class TrainerPanel(QWidget):
         for key, label in self._hidden_labels.items():
             label.setText(stat_label(key))
         for index, spell_id in enumerate(self._spell_tab_spell_ids):
-            spell_type = self._spell_types.get(spell_id, spell_id)
-            display_name = spell_display_name(spell_type, get_language())
+            display_name = self._spell_tab_names.get(spell_id, str(spell_id))
             self._tabs.setTabText(1 + index, trainer_tab_label('spell', name=display_name))
         for (spell_id, key), label in self._spell_labels.items():
-            label.setText(stat_label(key))
+            label_key = self._spell_label_keys.get((spell_id, key), key)
+            label.setText(stat_label(label_key))
 
     def eventFilter(self, obj, event):
         if event.type() == QEvent.Type.MouseButtonPress:

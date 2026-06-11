@@ -1,16 +1,38 @@
 from dataclasses import dataclass
 from lab.trainer import offsets as off
+from lab.trainer.il2cpp_layout import read_list_item, read_list_size
 from lab.trainer.memory import ProcessMemory, is_user_ptr
 from lab.trainer.spell_names import spell_display_name
-from lab.trainer.stat_calc import find_stat_by_type, read_stat_display_value, write_stat_display_value
+from lab.trainer.spell_stat_meta import (
+    infer_spell_stat_display_type,
+    spell_stat_decimals,
+    spell_stat_label_key,
+    spell_stat_storage_key,
+    SPELL_LEVEL_KEY,
+)
+from lab.trainer.stat_calc import (
+    find_stat_by_type,
+    read_stat_display_value,
+    write_stat_panel_value,
+    StatCalcContext,
+    DISPLAY_VALUE,
+)
+
+@dataclass(frozen=True)
+class SpellStatField:
+    key: str
+    stat_type: int | None
+    label_key: str
+    decimals: int
 
 @dataclass(frozen=True)
 class SpellHandle:
     spell_id: int
-    spell_type_id: int
+    level: int
     spell_attrs_ptr: int
     stats_list_ptr: int
     name: str
+    stat_fields: tuple[SpellStatField, ...]
 
 _EMPTY_HASH = 0xFFFFFFFF
 SUPER_ATTACK_DAMAGE = 9999.0
@@ -31,6 +53,31 @@ def _iter_dict_int_object_entries(mem: ProcessMemory, dict_ptr: int):
         if is_user_ptr(value_ptr):
             yield spell_id, value_ptr
 
+def _build_stat_fields(mem: ProcessMemory, stats_list_ptr: int) -> tuple[SpellStatField, ...]:
+    fields: list[SpellStatField] = []
+    fields.append(SpellStatField(
+        key=SPELL_LEVEL_KEY,
+        stat_type=None,
+        label_key='spell_level',
+        decimals=0,
+    ))
+    size = read_list_size(mem, stats_list_ptr)
+    stat_types: list[int] = []
+    for index in range(size):
+        stat_ptr = read_list_item(mem, stats_list_ptr, index)
+        if not stat_ptr:
+            continue
+        stat_type = mem.read_u32(stat_ptr + off.STAT_TYPE)
+        stat_types.append(stat_type)
+    for stat_type in sorted(set(stat_types)):
+        fields.append(SpellStatField(
+            key=spell_stat_storage_key(stat_type),
+            stat_type=stat_type,
+            label_key=spell_stat_label_key(stat_type),
+            decimals=spell_stat_decimals(stat_type),
+        ))
+    return tuple(fields)
+
 def list_equipped_spells(mem: ProcessMemory, player_stats_ptr: int) -> list[SpellHandle]:
     if not is_user_ptr(player_stats_ptr):
         return []
@@ -40,19 +87,59 @@ def list_equipped_spells(mem: ProcessMemory, player_stats_ptr: int) -> list[Spel
         stats_list_ptr = mem.read_u64(spell_attrs_ptr + off.SPELL_ATTRIBUTES_STATS)
         if not is_user_ptr(stats_list_ptr):
             continue
-        spell_type_id = mem.read_i32(spell_attrs_ptr + off.SPELL_ATTRIBUTES_SPELL_TYPE)
+        level = mem.read_i32(spell_attrs_ptr + off.SPELL_ATTRIBUTES_LEVEL)
+        stat_fields = _build_stat_fields(mem, stats_list_ptr)
         spells.append(SpellHandle(
             spell_id=spell_id,
-            spell_type_id=spell_type_id,
+            level=level,
             spell_attrs_ptr=spell_attrs_ptr,
             stats_list_ptr=stats_list_ptr,
-            name=spell_display_name(spell_type_id),
+            name=spell_display_name(spell_id),
+            stat_fields=stat_fields,
         ))
     spells.sort(key=lambda item: item.spell_id)
     return spells
 
-def spells_signature(spells: list[SpellHandle]) -> tuple[int, ...]:
-    return tuple(item.spell_id for item in spells)
+def spells_signature(spells: list[SpellHandle]) -> tuple[tuple[int, tuple[str, ...]], ...]:
+    return tuple((item.spell_id, tuple(field.key for field in item.stat_fields)) for item in spells)
+
+def read_spell_stats(
+    mem: ProcessMemory,
+    handle: SpellHandle,
+    ctx: StatCalcContext,
+) -> dict[str, float]:
+    values: dict[str, float] = {SPELL_LEVEL_KEY: float(handle.level)}
+    for field in handle.stat_fields:
+        if field.stat_type is None:
+            continue
+        stat_ptr = find_stat_by_type(mem, handle.stats_list_ptr, field.stat_type)
+        if not stat_ptr:
+            continue
+        calc_type = mem.read_u32(stat_ptr + off.STAT_CALCULATION_TYPE)
+        display_type = infer_spell_stat_display_type(field.stat_type, calc_type)
+        value = read_stat_display_value(mem, stat_ptr, ctx, display_type=display_type)
+        values[field.key] = value
+    return values
+
+def write_spell_stat(
+    mem: ProcessMemory,
+    handle: SpellHandle,
+    key: str,
+    value: float,
+    ctx: StatCalcContext,
+) -> bool:
+    if key == SPELL_LEVEL_KEY:
+        return mem.write_u32(handle.spell_attrs_ptr + off.SPELL_ATTRIBUTES_LEVEL, int(value))
+    for field in handle.stat_fields:
+        if field.key != key or field.stat_type is None:
+            continue
+        stat_ptr = find_stat_by_type(mem, handle.stats_list_ptr, field.stat_type)
+        if not stat_ptr:
+            return False
+        calc_type = mem.read_u32(stat_ptr + off.STAT_CALCULATION_TYPE)
+        display_type = infer_spell_stat_display_type(field.stat_type, calc_type)
+        return write_stat_panel_value(mem, stat_ptr, value, ctx, display_type=display_type)
+    return False
 
 def spell_stat_ptr(mem: ProcessMemory, player_stats_ptr: int, spell_id: int, stat_type: int) -> int:
     if not is_user_ptr(player_stats_ptr):
@@ -77,15 +164,15 @@ def apply_super_attack(mem: ProcessMemory, player_stats_ptr: int, enabled: bool,
     if enabled:
         saved.clear()
         for stat_ptr in _iter_spell_damage_stats(mem, player_stats_ptr):
-            saved.append((stat_ptr, read_stat_display_value(mem, stat_ptr)))
-            write_stat_display_value(mem, stat_ptr, SUPER_ATTACK_DAMAGE)
+            saved.append((stat_ptr, read_stat_display_value(mem, stat_ptr, display_type=DISPLAY_VALUE)))
+            write_stat_panel_value(mem, stat_ptr, SUPER_ATTACK_DAMAGE, display_type=DISPLAY_VALUE)
         return bool(saved)
     ok = True
     for stat_ptr, value in saved:
-        ok = write_stat_display_value(mem, stat_ptr, value) and ok
+        ok = write_stat_panel_value(mem, stat_ptr, value, display_type=DISPLAY_VALUE) and ok
     saved.clear()
     return ok
 
 def reapply_super_attack(mem: ProcessMemory, player_stats_ptr: int) -> None:
     for stat_ptr in _iter_spell_damage_stats(mem, player_stats_ptr):
-        write_stat_display_value(mem, stat_ptr, SUPER_ATTACK_DAMAGE)
+        write_stat_panel_value(mem, stat_ptr, SUPER_ATTACK_DAMAGE, display_type=DISPLAY_VALUE)

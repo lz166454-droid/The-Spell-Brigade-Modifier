@@ -11,6 +11,7 @@ STAT_CALC_PERCENT_ADD_LOG = 2
 DISPLAY_VALUE = 'value'
 DISPLAY_MODIFIER_PERCENT = 'modifier_percent'
 DISPLAY_VALUE_PERCENT = 'value_percent'
+DISPLAY_LIFETIME_CENTIS = 'lifetime_centis'
 ARMOR_MOVEMENT_SPEED_FACTOR = 0.7
 ARMOR_DAMAGE_FACTOR = 0.407
 _KLASS_STARTING = 'StartingStatModifier'
@@ -167,6 +168,8 @@ def read_stat_display_value(
     *,
     display_type: str = DISPLAY_VALUE,
 ) -> float:
+    if display_type == DISPLAY_LIFETIME_CENTIS:
+        return _read_numeric_display_value(mem, stat_ptr, ctx) / 100.0
     if display_type == DISPLAY_MODIFIER_PERCENT:
         modifiers_ptr = mem.read_u64(stat_ptr + off.STAT_MODIFIERS)
         return _read_modifier_percent_panel(mem, modifiers_ptr, ctx)
@@ -270,6 +273,8 @@ def write_stat_panel_value(
     *,
     display_type: str = DISPLAY_VALUE,
 ) -> bool:
+    if display_type == DISPLAY_LIFETIME_CENTIS:
+        return write_flat_panel_value(mem, stat_ptr, target * 100.0, ctx)
     if display_type == DISPLAY_MODIFIER_PERCENT:
         modifiers_ptr = mem.read_u64(stat_ptr + off.STAT_MODIFIERS)
         non_starting_only = _modifier_percent_non_starting_only(mem, modifiers_ptr)

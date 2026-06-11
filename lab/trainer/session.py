@@ -5,17 +5,24 @@ from lab.trainer.il2cpp_layout import read_network_variable_float, write_network
 from lab.trainer.memory import ProcessMemory, TrainerMemoryError
 from lab.trainer.offsets import GAME_VERSION, PROCESS_NAMES
 from lab.trainer.player_chain import PlayerHandles, format_handles, read_character_stats, read_panel_stat, resolve_player_handles
-from lab.trainer.spell_stats import apply_super_attack, list_equipped_spells, reapply_super_attack, spell_stat_ptr
+from lab.trainer.spell_stats import (
+    apply_super_attack,
+    list_equipped_spells,
+    read_spell_stats,
+    reapply_super_attack,
+    write_spell_stat,
+    SpellStatField,
+)
 from lab.trainer.static_resolve import TrainerConfig, load_config, resolve_manager_cached, resolve_manager_ptr
 from lab.trainer.stat_calc import StatCalcContext, find_stat_by_type, write_stat_panel_value
-from lab.trainer.stats_meta import BASIC_STATS, HIDDEN_STATS, SPELL_STATS, SPELL_STAT_BY_KEY, STAT_BY_KEY
+from lab.trainer.stats_meta import BASIC_STATS, HIDDEN_STATS, STAT_BY_KEY
 
 @dataclass
 class SpellSnapshot:
     id: int
-    spell_type_id: int
     name: str
     stats: dict[str, float]
+    stat_fields: tuple[SpellStatField, ...]
 
 @dataclass
 class TrainerSnapshot:
@@ -101,8 +108,8 @@ class TrainerSession:
         if self._super_attack and self._handles:
             reapply_super_attack(self._mem, self._handles.player_stats_ptr)
 
-    def _round_stat(self, item, value: float) -> float:
-        return round(value) if item.decimals == 0 else round(value, item.decimals)
+    def _round_stat(self, decimals: int, value: float) -> float:
+        return round(value) if decimals == 0 else round(value, decimals)
 
     def read_snapshot(self) -> TrainerSnapshot:
         if not self._handles:
@@ -113,20 +120,21 @@ class TrainerSession:
             item = STAT_BY_KEY.get(key)
             if not item:
                 continue
-            stats[key] = self._round_stat(item, value)
+            stats[key] = self._round_stat(item.decimals, value)
         ctx = StatCalcContext(stats_list_ptr=self._handles.stats_list_ptr)
         spells: list[SpellSnapshot] = []
         for handle in list_equipped_spells(self._mem, self._handles.player_stats_ptr):
+            raw_spell_stats = read_spell_stats(self._mem, handle, ctx)
             spell_stats: dict[str, float] = {}
-            for item in SPELL_STATS:
-                value = read_panel_stat(self._mem, self._handles, item, ctx, spell_id=handle.spell_id)
-                if value is not None:
-                    spell_stats[item.key] = self._round_stat(item, value)
+            for field in handle.stat_fields:
+                if field.key not in raw_spell_stats:
+                    continue
+                spell_stats[field.key] = self._round_stat(field.decimals, raw_spell_stats[field.key])
             spells.append(SpellSnapshot(
                 id=handle.spell_id,
-                spell_type_id=handle.spell_type_id,
                 name=handle.name,
                 stats=spell_stats,
+                stat_fields=handle.stat_fields,
             ))
         return TrainerSnapshot(stats=stats, spells=spells)
 
@@ -135,32 +143,31 @@ class TrainerSession:
 
     def read_stat(self, key: str, spell_id: int | None = None) -> float | None:
         if spell_id is not None:
-            item = SPELL_STAT_BY_KEY.get(key)
-        else:
-            item = STAT_BY_KEY.get(key)
+            if not self._handles:
+                return None
+            ctx = StatCalcContext(stats_list_ptr=self._handles.stats_list_ptr)
+            for handle in list_equipped_spells(self._mem, self._handles.player_stats_ptr):
+                if handle.spell_id != spell_id:
+                    continue
+                values = read_spell_stats(self._mem, handle, ctx)
+                return values.get(key)
+            return None
+        item = STAT_BY_KEY.get(key)
         if not item or not self._handles:
             return None
         ctx = StatCalcContext(stats_list_ptr=self._handles.stats_list_ptr)
-        return read_panel_stat(self._mem, self._handles, item, ctx, spell_id=spell_id)
+        return read_panel_stat(self._mem, self._handles, item, ctx)
 
     def write_stat(self, key: str, value: float, spell_id: int | None = None) -> bool:
         if not self._handles:
             return False
         ctx = StatCalcContext(stats_list_ptr=self._handles.stats_list_ptr)
         if spell_id is not None:
-            item = SPELL_STAT_BY_KEY.get(key)
-            if not item:
-                return False
-            stat_ptr = spell_stat_ptr(self._mem, self._handles.player_stats_ptr, spell_id, item.stat_type)
-            if not stat_ptr:
-                return False
-            return write_stat_panel_value(
-                self._mem,
-                stat_ptr,
-                value,
-                ctx,
-                display_type=item.display_type,
-            )
+            for handle in list_equipped_spells(self._mem, self._handles.player_stats_ptr):
+                if handle.spell_id != spell_id:
+                    continue
+                return write_spell_stat(self._mem, handle, key, value, ctx)
+            return False
         item = STAT_BY_KEY.get(key)
         if not item:
             return False
