@@ -3,7 +3,7 @@ from pathlib import Path
 
 APP_NAME = '咒语旅团'
 APP_SUBTITLE = '修改器'
-APP_VERSION = '0.2.0'
+APP_VERSION = '0.2.1'
 
 def _project_root() -> Path:
     return Path(__file__).resolve().parent.parent

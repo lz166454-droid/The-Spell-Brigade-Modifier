@@ -1,4 +1,4 @@
-# Spell Brigade Modifier v0.2.0
+# Spell Brigade Modifier v0.2.1
 
 [中文](../README.md) · [English](README.en.md)
 
