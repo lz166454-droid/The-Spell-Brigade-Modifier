@@ -1,7 +1,7 @@
 from PySide6.QtCore import QEvent, Qt, Signal
 from PySide6.QtWidgets import (
     QApplication, QCheckBox, QDoubleSpinBox, QFrame, QGridLayout, QHBoxLayout, QLabel,
-    QPushButton, QScrollArea, QTabWidget, QVBoxLayout, QWidget,
+    QPushButton, QScrollArea, QSizePolicy, QTabWidget, QVBoxLayout, QWidget,
 )
 from lab.trainer.stats_meta import BASIC_STATS, HIDDEN_STATS, SPELL_STATS
 from ui.i18n import stat_label, trainer_tab_label, tr
@@ -127,14 +127,21 @@ class TrainerPanel(QWidget):
         body.setAutoFillBackground(False)
         layout = QGridLayout(body)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setHorizontalSpacing(12)
-        layout.setVerticalSpacing(8)
+        layout.setHorizontalSpacing(6)
+        layout.setVerticalSpacing(4)
+        layout.setColumnStretch(0, 0)
+        layout.setColumnStretch(1, 0)
+        layout.setColumnStretch(2, 1)
         spins: dict[str, TrainerCommitSpinBox] = {}
         labels: dict[str, QLabel] = {}
         for row, item in enumerate(stat_defs):
             label = QLabel(body)
             label.setObjectName('fieldLabel')
+            label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
             spin = TrainerCommitSpinBox(body)
+            spin.setObjectName('trainerStatSpin')
+            spin.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+            spin.setFixedWidth(112)
             spin.setRange(-99999, 999999)
             spin.setDecimals(item.decimals)
             spin.setButtonSymbols(QDoubleSpinBox.ButtonSymbols.NoButtons)
@@ -142,9 +149,10 @@ class TrainerPanel(QWidget):
             spin.setProperty('spell_id', spell_id if spell_id is not None else -1)
             spin.value_committed.connect(self._on_stat_committed)
             layout.addWidget(label, row, 0)
-            layout.addWidget(spin, row, 1)
+            layout.addWidget(spin, row, 1, Qt.AlignmentFlag.AlignLeft)
             labels[item.key] = label
             spins[item.key] = spin
+        layout.setRowStretch(len(stat_defs), 1)
         return body, spins, labels
 
     def _rebuild_spell_tabs(self, spells: list[dict]) -> None:

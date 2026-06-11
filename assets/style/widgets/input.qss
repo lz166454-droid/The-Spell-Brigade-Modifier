@@ -13,6 +13,13 @@ QSpinBox:focus, QDoubleSpinBox:focus, QLineEdit:focus {
     border-color: {{border_focus}};
 }
 
+QDoubleSpinBox#trainerStatSpin {
+    min-height: 24px;
+    max-height: 24px;
+    padding: 2px 8px;
+    font: 12px 'Consolas';
+}
+
 QCheckBox {
     color: {{text_primary}};
     font: 12px 'Microsoft YaHei UI';
