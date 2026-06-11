@@ -74,10 +74,23 @@ QPushButton#mainToolbarSecondaryBtn:pressed {
     background-color: {{nav_bg_pressed}};
 }
 
+QPushButton#mainToolbarSecondaryBtn:disabled {
+    background-color: {{nav_bg_pressed}};
+    color: {{text_muted}};
+    border: 1px solid {{border_subtle}};
+}
+
 QPushButton#mainToolbarSecondaryBtn:focus {
     outline: none;
     background-color: transparent;
     border: 1px solid {{text_secondary}};
+}
+
+QPushButton#mainToolbarSecondaryBtn:disabled:focus {
+    outline: none;
+    background-color: {{nav_bg_pressed}};
+    border: 1px solid {{border_subtle}};
+    color: {{text_muted}};
 }
 
 QPushButton#trainerStartBtn {
