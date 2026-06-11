@@ -154,22 +154,22 @@ def main() -> int:
     parser.add_argument('--folder', action='store_true', help='输出 standalone 目录而非单文件 exe')
     args = parser.parse_args()
     if not MAIN.is_file():
-        print(f'缺少入口文件: {MAIN}', file=sys.stderr)
+        print(f'Missing entry file: {MAIN}', file=sys.stderr)
         return 1
     if not ASSETS.is_dir():
-        print(f'缺少资源目录: {ASSETS}', file=sys.stderr)
+        print(f'Missing assets directory: {ASSETS}', file=sys.stderr)
         return 1
     if not ICON.is_file():
-        print(f'提示: 未找到 {ICON}，将不设置 exe 图标')
+        print(f'Note: icon not found at {ICON}, exe will have no custom icon')
     DIST.mkdir(parents=True, exist_ok=True)
     cmd = build_nuitka_cmd(onefile=not args.folder)
-    print('执行:', ' '.join(_quote(part) for part in cmd))
+    print('Running:', ' '.join(_quote(part) for part in cmd))
     completed = subprocess.run(cmd, cwd=ROOT)
     if completed.returncode == 0:
         if args.folder:
-            print(f'完成: {DIST / f"{MAIN.stem}.dist" / f"{OUTPUT_NAME}.exe"}')
+            print(f'Done: {DIST / f"{MAIN.stem}.dist" / f"{OUTPUT_NAME}.exe"}')
         else:
-            print(f'完成: {DIST / f"{OUTPUT_NAME}.exe"}')
+            print(f'Done: {DIST / f"{OUTPUT_NAME}.exe"}')
     return completed.returncode
 
 if __name__ == '__main__':
