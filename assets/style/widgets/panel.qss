@@ -4,6 +4,13 @@ QFrame#panelCard {
     border-radius: 8px;
 }
 
+QFrame#mainPageHeader {
+    background: {{bg_page_surface}};
+    border: none;
+    border-bottom: 1px solid {{border_subtle}};
+    border-radius: 0;
+}
+
 QFrame#slotPanel {
     background: {{bg_card}};
     border: 1px solid {{border_subtle}};
@@ -101,7 +108,7 @@ QFrame#trainerColumnDivider {
 QTabWidget#saveEditTabs::pane,
 QTabWidget#trainerTabs::pane {
     border: none;
-    background: transparent;
+    background: {{bg_page_surface}};
     top: -1px;
 }
 

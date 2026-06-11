@@ -54,10 +54,36 @@ QPushButton#secondaryBtn:focus {
     border: 1px solid {{border_subtle}};
 }
 
+QPushButton#mainToolbarSecondaryBtn {
+    background-color: transparent;
+    color: {{text_primary}};
+    border: 1px solid {{text_secondary}};
+    border-radius: 4px;
+    font: 11px 'Microsoft YaHei UI';
+    padding: 0 10px;
+    min-height: 22px;
+    max-height: 24px;
+}
+
+QPushButton#mainToolbarSecondaryBtn:hover {
+    background-color: {{nav_bg_hover}};
+    border-color: {{border_focus}};
+}
+
+QPushButton#mainToolbarSecondaryBtn:pressed {
+    background-color: {{nav_bg_pressed}};
+}
+
+QPushButton#mainToolbarSecondaryBtn:focus {
+    outline: none;
+    background-color: transparent;
+    border: 1px solid {{text_secondary}};
+}
+
 QPushButton#trainerStartBtn {
     background-color: transparent;
     color: {{text_primary}};
-    border: 1px solid {{border_subtle}};
+    border: 1px solid {{text_secondary}};
     border-radius: 4px;
     font: 11px 'Microsoft YaHei UI';
     padding: 0 10px;
@@ -77,7 +103,7 @@ QPushButton#trainerStartBtn:pressed {
 QPushButton#trainerStartBtn:focus {
     outline: none;
     background-color: transparent;
-    border: 1px solid {{border_subtle}};
+    border: 1px solid {{text_secondary}};
 }
 
 QPushButton#trainerStartBtnActive {
@@ -100,6 +126,58 @@ QPushButton#trainerStartBtnActive:focus {
     outline: none;
     background-color: {{accent_success}};
     border: none;
+}
+
+QPushButton#trainerStartBtnDetach {
+    background-color: transparent;
+    color: {{accent_danger}};
+    border: 1px solid {{accent_danger}};
+    border-radius: 4px;
+    font: 11px 'Microsoft YaHei UI';
+    padding: 0 10px;
+    min-height: 22px;
+    max-height: 24px;
+}
+
+QPushButton#trainerStartBtnDetach:hover {
+    background-color: {{nav_bg_hover}};
+    border-color: {{accent_danger}};
+}
+
+QPushButton#trainerStartBtnDetach:pressed {
+    background-color: {{nav_bg_pressed}};
+}
+
+QPushButton#trainerStartBtnDetach:focus {
+    outline: none;
+    background-color: transparent;
+    border: 1px solid {{accent_danger}};
+}
+
+QPushButton#trainerPresetSecondaryBtn {
+    background-color: transparent;
+    color: {{text_primary}};
+    border: 1px solid {{text_secondary}};
+    border-radius: 4px;
+    font: 11px 'Microsoft YaHei UI';
+    padding: 0 10px;
+    min-height: 22px;
+    max-height: 24px;
+}
+
+QPushButton#trainerPresetSecondaryBtn:hover {
+    background-color: {{nav_bg_hover}};
+    border-color: {{border_focus}};
+}
+
+QPushButton#trainerPresetSecondaryBtn:pressed {
+    background-color: {{nav_bg_pressed}};
+}
+
+QPushButton#trainerPresetSecondaryBtn:focus {
+    outline: none;
+    background-color: transparent;
+    border: 1px solid {{text_secondary}};
 }
 
 QPushButton#goldPresetBtn {

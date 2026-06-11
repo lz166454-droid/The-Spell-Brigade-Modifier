@@ -106,6 +106,7 @@ class MainWindow(FramelessWindow):
         self._vm.modify_failed.connect(self._on_modify_failed)
         self._trainer_vm.attach_failed.connect(self._on_trainer_failed)
         self._trainer_vm.attach_succeeded.connect(self._on_trainer_started)
+        self._trainer_vm.detached.connect(self._on_trainer_detached)
         signals.theme_changed.connect(self._on_theme_changed)
         signals.language_changed.connect(self._on_language_changed)
         signals.status_message.connect(self._set_status)
@@ -157,6 +158,9 @@ class MainWindow(FramelessWindow):
 
     def _on_trainer_started(self) -> None:
         self._set_trainer_attached_ui(True)
+
+    def _on_trainer_detached(self) -> None:
+        self._set_trainer_attached_ui(False)
 
     def _on_trainer_failed(self, message: str) -> None:
         self._set_trainer_attached_ui(self._trainer_vm.attached)

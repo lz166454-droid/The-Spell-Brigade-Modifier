@@ -17,6 +17,55 @@ QWidget#panelScrollContent {
     background: {{bg_card}};
 }
 
+QTabWidget#saveEditTabs QScrollArea#panelScroll,
+QTabWidget#saveEditTabs QScrollArea#panelScroll > QWidget > QWidget,
+QTabWidget#saveEditTabs QWidget#panelScrollViewport,
+QTabWidget#saveEditTabs QScrollArea#panelScroll QWidget#panelScrollContent {
+    background: {{bg_page_surface}};
+}
+
+QTabWidget#saveEditTabs QScrollArea#panelScroll QScrollBar:vertical,
+QTabWidget#trainerTabs QScrollArea#panelScroll QScrollBar:vertical {
+    background: {{bg_page_surface}};
+}
+
+QTabWidget#saveEditTabs QScrollArea#panelScroll QScrollBar::add-page:vertical,
+QTabWidget#saveEditTabs QScrollArea#panelScroll QScrollBar::sub-page:vertical,
+QTabWidget#trainerTabs QScrollArea#panelScroll QScrollBar::add-page:vertical,
+QTabWidget#trainerTabs QScrollArea#panelScroll QScrollBar::sub-page:vertical {
+    background: {{bg_page_surface}};
+}
+
+QTabWidget#trainerTabs QScrollArea#panelScroll,
+QTabWidget#trainerTabs QScrollArea#panelScroll > QWidget > QWidget,
+QTabWidget#trainerTabs QWidget#panelScrollViewport,
+QTabWidget#trainerTabs QScrollArea#panelScroll QWidget#panelScrollContent {
+    background: {{bg_page_surface}};
+}
+
+QScrollArea#trainerBasicScroll {
+    background: {{bg_page_surface}};
+    border: none;
+}
+
+QScrollArea#trainerBasicScroll > QWidget > QWidget,
+QWidget#trainerBasicScrollViewport {
+    background: {{bg_page_surface}};
+}
+
+QScrollArea#trainerBasicScroll QWidget#panelScrollContent {
+    background: {{bg_page_surface}};
+}
+
+QScrollArea#trainerBasicScroll QScrollBar:vertical {
+    background: {{bg_page_surface}};
+}
+
+QScrollArea#trainerBasicScroll QScrollBar::add-page:vertical,
+QScrollArea#trainerBasicScroll QScrollBar::sub-page:vertical {
+    background: {{bg_page_surface}};
+}
+
 QStackedWidget {
     background: transparent;
 }

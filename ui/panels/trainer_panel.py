@@ -70,7 +70,7 @@ class TrainerPanel(QWidget):
         root.setContentsMargins(20, 16, 20, 16)
         root.setSpacing(12)
         header = QFrame(self)
-        header.setObjectName('panelCard')
+        header.setObjectName('mainPageHeader')
         header_layout = QVBoxLayout(header)
         header_layout.setContentsMargins(16, 12, 16, 12)
         header_layout.setSpacing(8)
@@ -79,7 +79,7 @@ class TrainerPanel(QWidget):
         self._start_btn = QPushButton(header)
         self._start_btn.setObjectName('trainerStartBtn')
         self._refresh_btn = QPushButton(header)
-        self._refresh_btn.setObjectName('secondaryBtn')
+        self._refresh_btn.setObjectName('mainToolbarSecondaryBtn')
         self._refresh_btn.setEnabled(False)
         self._start_btn.clicked.connect(self._on_start_clicked)
         self._refresh_btn.clicked.connect(self._on_refresh_clicked)
@@ -103,7 +103,7 @@ class TrainerPanel(QWidget):
         self._tabs = QTabWidget(self)
         self._tabs.setObjectName('trainerTabs')
         basic_body, self._basic_spins, self._basic_labels, self._hidden_spins, self._hidden_labels = self._make_combined_basic_body()
-        self._tabs.addTab(self._make_tab_page(basic_body), '')
+        self._tabs.addTab(self._make_tab_page(basic_body, basic_tab=True), '')
         root.addWidget(self._tabs, 1)
         self.installEventFilter(self)
         for child in self.findChildren(QWidget):
@@ -111,17 +111,17 @@ class TrainerPanel(QWidget):
                 child.installEventFilter(self)
         self.retranslate_ui()
 
-    def _make_tab_page(self, body: QWidget) -> QWidget:
+    def _make_tab_page(self, body: QWidget, *, basic_tab: bool = False) -> QWidget:
         page = QWidget()
         page_layout = QVBoxLayout(page)
         page_layout.setContentsMargins(20, 16, 20, 16)
         page_layout.setSpacing(12)
         scroll = QScrollArea(page)
-        scroll.setObjectName('panelScroll')
+        scroll.setObjectName('trainerBasicScroll' if basic_tab else 'panelScroll')
         scroll.setFrameShape(QFrame.Shape.NoFrame)
         scroll.setWidgetResizable(True)
         scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        scroll.viewport().setObjectName('panelScrollViewport')
+        scroll.viewport().setObjectName('trainerBasicScrollViewport' if basic_tab else 'panelScrollViewport')
         scroll.viewport().setAutoFillBackground(False)
         body.setAutoFillBackground(False)
         scroll.setWidget(self._wrap_left_aligned(body))
@@ -196,11 +196,11 @@ class TrainerPanel(QWidget):
         action_row_top = QHBoxLayout()
         action_row_top.setSpacing(8)
         self._preset_preview_btn = QPushButton(column)
-        self._preset_preview_btn.setObjectName('secondaryBtn')
+        self._preset_preview_btn.setObjectName('trainerPresetSecondaryBtn')
         self._preset_apply_btn = QPushButton(column)
         self._preset_apply_btn.setObjectName('trainerPresetApplyBtn')
         self._preset_save_btn = QPushButton(column)
-        self._preset_save_btn.setObjectName('secondaryBtn')
+        self._preset_save_btn.setObjectName('trainerPresetSecondaryBtn')
         self._preset_preview_btn.clicked.connect(self._on_preset_preview_clicked)
         self._preset_apply_btn.clicked.connect(self._on_preset_apply_clicked)
         self._preset_save_btn.clicked.connect(self._on_preset_save_clicked)
@@ -214,15 +214,15 @@ class TrainerPanel(QWidget):
         action_row_bottom = QHBoxLayout()
         action_row_bottom.setSpacing(8)
         self._preset_default_btn = QPushButton(column)
-        self._preset_default_btn.setObjectName('secondaryBtn')
+        self._preset_default_btn.setObjectName('trainerPresetSecondaryBtn')
         action_row_bottom.addWidget(self._preset_default_btn)
         column_layout.addLayout(action_row_bottom)
         action_row_manage = QHBoxLayout()
         action_row_manage.setSpacing(8)
         self._preset_rename_btn = QPushButton(column)
-        self._preset_rename_btn.setObjectName('secondaryBtn')
+        self._preset_rename_btn.setObjectName('trainerPresetSecondaryBtn')
         self._preset_delete_btn = QPushButton(column)
-        self._preset_delete_btn.setObjectName('secondaryBtn')
+        self._preset_delete_btn.setObjectName('trainerPresetSecondaryBtn')
         self._preset_default_btn.clicked.connect(self._on_preset_default_clicked)
         self._preset_rename_btn.clicked.connect(self._on_preset_rename_clicked)
         self._preset_delete_btn.clicked.connect(self._on_preset_delete_clicked)
@@ -375,7 +375,10 @@ class TrainerPanel(QWidget):
         return body, spins, labels
 
     def retranslate_ui(self) -> None:
-        self._start_btn.setText(tr('toolbar.start_trainer'))
+        if self._vm is not None and self._vm.attached:
+            self._start_btn.setText(tr('toolbar.detach_trainer'))
+        else:
+            self._start_btn.setText(tr('toolbar.start_trainer'))
         self._refresh_btn.setText(tr('toolbar.refresh_trainer'))
         self._invincible_mode.setText(tr('trainer.invincible'))
         self._super_attack.setText(tr('trainer.super_attack'))
@@ -447,23 +450,41 @@ class TrainerPanel(QWidget):
         view_model.spells_changed.connect(self._on_spells_changed)
         view_model.attach_succeeded.connect(self._on_attach_state_changed)
         view_model.attach_failed.connect(self._on_attach_state_changed)
+        view_model.detached.connect(self._on_detached)
         view_model.presets_changed.connect(self._refresh_preset_list)
         self.set_attached_ui(view_model.attached)
         self._refresh_preset_list()
 
     def set_attached_ui(self, attached: bool) -> None:
-        self._start_btn.setEnabled(not attached)
+        self._start_btn.setEnabled(True)
         self._refresh_btn.setEnabled(attached)
         if attached:
-            self._start_btn.setObjectName('trainerStartBtnActive')
+            self._start_btn.setText(tr('toolbar.detach_trainer'))
+            self._start_btn.setObjectName('trainerStartBtnDetach')
         else:
+            self._start_btn.setText(tr('toolbar.start_trainer'))
             self._start_btn.setObjectName('trainerStartBtn')
         self._start_btn.style().unpolish(self._start_btn)
         self._start_btn.style().polish(self._start_btn)
         self._update_preset_actions()
 
+    def _reset_trainer_data(self) -> None:
+        self._tab_preview_active = False
+        self._updating = True
+        for spin in list(self._basic_spins.values()) + list(self._hidden_spins.values()):
+            spin.setValue(0.0)
+        self._invincible_mode.setChecked(False)
+        self._super_attack.setChecked(False)
+        self._updating = False
+        self._rebuild_spell_tabs([])
+
     def _on_start_clicked(self) -> None:
-        if self._vm is None or self._vm.attached:
+        if self._vm is None:
+            return
+        if self._vm.attached:
+            self._start_btn.setEnabled(False)
+            self._refresh_btn.setEnabled(False)
+            self._vm.detach()
             return
         self._start_btn.setEnabled(False)
         self._refresh_btn.setEnabled(False)
@@ -481,6 +502,10 @@ class TrainerPanel(QWidget):
         if self._vm.attached:
             self._tab_preview_active = False
         self.set_attached_ui(self._vm.attached)
+
+    def _on_detached(self) -> None:
+        self._reset_trainer_data()
+        self.set_attached_ui(False)
 
     def _on_spells_changed(self, spells: list) -> None:
         self._rebuild_spell_tabs(spells)

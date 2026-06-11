@@ -21,6 +21,30 @@ QTreeWidget#achievementTree::item:selected {
     color: {{text_primary}};
 }
 
+QListWidget#trainerPresetList {
+    background: {{bg_card}};
+    border: 1px solid {{border_subtle}};
+    border-radius: 6px;
+    color: {{text_primary}};
+    font: 11px 'Microsoft YaHei UI';
+    outline: none;
+    padding: 4px;
+}
+
+QListWidget#trainerPresetList::item {
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+QListWidget#trainerPresetList::item:hover {
+    background: {{nav_bg_hover}};
+}
+
+QListWidget#trainerPresetList::item:selected {
+    background: {{nav_bg_pressed}};
+    color: {{text_primary}};
+}
+
 QComboBox#categoryCombo {
     background: {{bg_input}};
     color: {{text_primary}};

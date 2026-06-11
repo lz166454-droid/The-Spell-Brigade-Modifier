@@ -3,6 +3,7 @@
   "bg_area": "#1a1a2e",
   "bg_panel": "#16213e",
   "bg_card": "#1e2746",
+  "bg_page_surface": "transparent",
   "bg_input": "#12121f",
   "border_subtle": "#2a2a4a",
   "border_focus": "#9b59b6",

@@ -11,6 +11,7 @@
   "toolbar.reload": "重新加载",
   "toolbar.apply": "应用修改",
   "toolbar.start_trainer": "启动修改",
+  "toolbar.detach_trainer": "断开附加重置数据",
   "toolbar.refresh_trainer": "刷新",
   "status.ready": "就绪",
   "status.loaded": "已加载槽位 #{slot} · {path}",

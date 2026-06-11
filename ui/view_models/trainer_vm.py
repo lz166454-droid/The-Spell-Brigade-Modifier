@@ -5,6 +5,7 @@ from ui.trainer_presets import PRESET_STATS, TrainerPreset, TrainerPresetStore
 class TrainerViewModel(QObject):
     attach_failed = Signal(str)
     attach_succeeded = Signal()
+    detached = Signal()
     stats_updated = Signal(dict, list)
     spells_changed = Signal(list)
     presets_changed = Signal()
@@ -31,6 +32,16 @@ class TrainerViewModel(QObject):
         from lab.trainer.diag import log
         log('UI: 用户点击启动修改')
         self._connect_session()
+
+    @Slot()
+    def detach(self) -> None:
+        from lab.trainer.diag import log
+        log('UI: 用户点击断开附加')
+        self._timer.stop()
+        if self._session.attached:
+            self._session.detach()
+        self._last_spell_signature = ()
+        self.detached.emit()
 
     @Slot()
     def reattach(self) -> None:

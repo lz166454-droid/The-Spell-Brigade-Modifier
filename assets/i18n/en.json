@@ -11,6 +11,7 @@
   "toolbar.reload": "Reload",
   "toolbar.apply": "Apply Changes",
   "toolbar.start_trainer": "Start Mod",
+  "toolbar.detach_trainer": "Detach & Reset",
   "toolbar.refresh_trainer": "Refresh",
   "status.ready": "Ready",
   "status.loaded": "Loaded slot #{slot} · {path}",
