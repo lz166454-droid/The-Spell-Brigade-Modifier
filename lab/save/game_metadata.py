@@ -2,7 +2,7 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-ROOT_DIR = Path(__file__).resolve().parent.parent
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 METADATA_FILE = ROOT_DIR / 'assets' / 'data' / 'game_metadata.json'
 LOCALE_ZH_FILE = ROOT_DIR / 'assets' / 'data' / 'locale.zh-CN.json'
 DEFAULT_LOCALE = 'zh-CN'

@@ -28,7 +28,7 @@ def _load_strings(lang: str) -> dict[str, str]:
     return _strings_cache[lang]
 
 def _sync_game_locale(lang: str) -> None:
-    from lab.game_metadata import set_display_locale
+    from lab.save.game_metadata import set_display_locale
     set_display_locale(lang)
 
 def get_language() -> str:

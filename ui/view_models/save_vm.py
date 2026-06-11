@@ -1,7 +1,7 @@
 import subprocess
 from pathlib import Path
 from PySide6.QtCore import QObject, Signal, Slot
-from lab.save_directory import SaveDirectoryEditor, DirectoryLoadResult
+from lab.save.save_directory import SaveDirectoryEditor, DirectoryLoadResult
 from ui.i18n import tr
 from ui.signals import signals
 from ui.theme import get_save_dir

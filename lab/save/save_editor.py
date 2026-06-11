@@ -2,9 +2,9 @@
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from lab.es3_crypto import decrypt_es3, encrypt_es3
-from lab.es3_parser import extract_save_data, extract_active_slot
-from lab.es3_modifier import modify_gold,modify_challenge_progress,modify_character_rank,add_character_rank,validate_modified_save,ModificationResult
+from lab.save.es3_crypto import decrypt_es3, encrypt_es3
+from lab.save.es3_modifier import modify_gold, modify_challenge_progress, modify_character_rank, add_character_rank, validate_modified_save, ModificationResult
+from lab.save.es3_parser import extract_save_data, extract_active_slot
 
 @dataclass
 class FileInfo:
@@ -144,7 +144,7 @@ class SaveEditor:
     def max_all_characters(self, *, max_level: int = 10, prestige: int = 2) -> ModificationResult:
         if not self.raw_text:
             return ModificationResult(False, '', 'No save loaded')
-        from lab.game_metadata import get_characters
+        from lab.save.game_metadata import get_characters
         for meta in get_characters():
             es3_data = extract_save_data(self.raw_text)
             if meta.id not in es3_data.character_ranks:

@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QComboBox, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget
-from lab.game_metadata import achievement_display_description, achievement_display_name, category_label, get_achievements, get_categories
+from lab.save.game_metadata import achievement_display_description, achievement_display_name, category_label, get_achievements, get_categories
 from ui.i18n import tr
 
 class CategoryComboBox(QComboBox):

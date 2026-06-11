@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QScrollArea, QSpinBox, QVBoxLayout, QWidget
-from lab.game_metadata import character_display_class, character_display_name, get_characters
+from lab.save.game_metadata import character_display_class, character_display_name, get_characters
 from ui.i18n import tr
 
 class CharacterPanel(QWidget):

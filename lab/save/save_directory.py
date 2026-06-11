@@ -2,9 +2,9 @@ import shutil
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from lab.es3_crypto import decrypt_es3, encrypt_es3
-from lab.es3_parser import extract_save_data, extract_active_slot
-from lab.save_editor import SaveEditor
+from lab.save.es3_crypto import decrypt_es3, encrypt_es3
+from lab.save.es3_parser import extract_save_data, extract_active_slot
+from lab.save.save_editor import SaveEditor
 
 SLOT_COUNT = 10
 DEFAULT_SAVE_DIR = Path.home() / 'AppData/LocalLow/BoltBlasterGames/TheSpellBrigade'
