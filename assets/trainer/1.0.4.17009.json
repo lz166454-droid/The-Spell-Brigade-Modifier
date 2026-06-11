@@ -1,8 +1,8 @@
 {
   "game_version": "1.0.4.17009",
-  "game_assembly_size": "0x5683000",
+  "game_assembly_size": "0x5709000",
   "typeinfo_rvas": {
-    "GameplayPlayerIdentity": "0x4be2af0"
+    "GameplayPlayerIdentity": "0x4c61a80"
   },
-  "manager_klass_slot_rva": "0x4d371d0"
+  "manager_klass_slot_rva": "0x4de3c28"
 }

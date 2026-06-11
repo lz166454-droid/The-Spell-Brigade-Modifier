@@ -14,7 +14,7 @@ BASIC_STATS: tuple[CharacterStatDef, ...] = (
     CharacterStatDef(16, 'health_regen', 0),
     CharacterStatDef(14, 'armor', 0),
     CharacterStatDef(15, 'dodge', 0),
-    CharacterStatDef(7, 'movement_speed', 0, display_type=DISPLAY_MODIFIER_PERCENT),
+    CharacterStatDef(7, 'movement_speed', 1, display_type=DISPLAY_MODIFIER_PERCENT),
     CharacterStatDef(12, 'critical_chance', 0),
     CharacterStatDef(13, 'critical_damage', 0, display_type=DISPLAY_VALUE_PERCENT),
     CharacterStatDef(11, 'pickup_radius', 0, display_type=DISPLAY_VALUE_PERCENT),

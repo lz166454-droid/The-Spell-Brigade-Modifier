@@ -258,6 +258,14 @@ def write_modifier_sum_panel_value(
         non_starting_only=non_starting_only,
         exclude_hidden=exclude_hidden,
     )
+    if not adjustable and non_starting_only:
+        fixed_sum, adjustable = _scan_modifiers_for_write(
+            mem,
+            modifiers_ptr,
+            ctx,
+            non_starting_only=False,
+            exclude_hidden=exclude_hidden,
+        )
     if not adjustable:
         return False
     for modifier_ptr in adjustable[:-1]:

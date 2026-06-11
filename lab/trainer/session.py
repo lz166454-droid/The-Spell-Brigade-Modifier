@@ -57,7 +57,7 @@ class TrainerSession:
         log(f'已附加 PID={self._mem.pid} · GameAssembly={self._mem.game_assembly_base:#x} size={self._mem.game_assembly_size:#x}')
         self._config = load_config(GAME_VERSION)
         if self._mem.game_assembly_size != self._config.game_assembly_size:
-            log(f'警告: GameAssembly 大小与配置不符 (当前 {self._mem.game_assembly_size:#x})')
+            log(f'注意: GameAssembly 大小与配置不符 (配置 {self._config.game_assembly_size:#x} · 当前 {self._mem.game_assembly_size:#x})，将尝试自动重定位')
         manager_ptr = resolve_manager_ptr(self._mem, self._config)
         self._config = load_config(GAME_VERSION)
         self._handles = resolve_player_handles(self._mem, manager_ptr)
