@@ -13,9 +13,17 @@ from lab.trainer.spell_stat_meta import (
 from lab.trainer.stat_calc import (
     find_stat_by_type,
     read_stat_display_value,
+    write_flat_panel_value,
+    write_modifier_sum_panel_value,
     write_stat_panel_value,
     StatCalcContext,
     DISPLAY_VALUE,
+    STAT_CALC_FLAT,
+    STAT_CALC_PERCENT_ADD,
+    STAT_CALC_PERCENT_ADD_LOG,
+    PERCENT_ADD_EXPONENT,
+    calculate_display_value,
+    sum_modifiers,
 )
 
 @dataclass(frozen=True)
@@ -36,6 +44,87 @@ class SpellHandle:
 
 _EMPTY_HASH = 0xFFFFFFFF
 SUPER_ATTACK_DAMAGE = 9999.0
+_CHAR_STAT_SPELL_DAMAGE = 0
+_CHAR_STAT_SPELL_FIRE_RATE = 2
+_CHAR_STAT_SPELL_RANGE = 6
+_SPELL_DAMAGE_TYPE = 0
+_SPELL_FIRE_RATE_TYPE = 2
+_SPELL_SIZE_TYPES = frozenset({5, 6})
+
+def _char_bonus_stat_type(spell_stat_type: int) -> int | None:
+    if spell_stat_type == _SPELL_DAMAGE_TYPE:
+        return _CHAR_STAT_SPELL_DAMAGE
+    if spell_stat_type == _SPELL_FIRE_RATE_TYPE:
+        return _CHAR_STAT_SPELL_FIRE_RATE
+    if spell_stat_type in _SPELL_SIZE_TYPES:
+        return _CHAR_STAT_SPELL_RANGE
+    return None
+
+def _read_char_spell_mod_sum(
+    mem: ProcessMemory,
+    ctx: StatCalcContext,
+    char_stat_type: int,
+) -> float:
+    if not is_user_ptr(ctx.stats_list_ptr):
+        return 0.0
+    stat_ptr = find_stat_by_type(mem, ctx.stats_list_ptr, char_stat_type)
+    if not stat_ptr:
+        return 0.0
+    modifiers_ptr = mem.read_u64(stat_ptr + off.STAT_MODIFIERS)
+    return sum_modifiers(mem, modifiers_ptr, ctx, exclude_hidden=True)
+
+def _combined_mod_sum_for_panel(base: float, panel_target: float, calc_type: int) -> float:
+    if calc_type == STAT_CALC_FLAT:
+        return panel_target - base
+    if calc_type == STAT_CALC_PERCENT_ADD:
+        if base == 0.0:
+            return 0.0
+        return (panel_target / base - 1.0) * 100.0
+    if calc_type == STAT_CALC_PERCENT_ADD_LOG:
+        if base <= 0.0:
+            return 0.0
+        ratio = panel_target / base
+        if ratio <= 0.0:
+            return -100.0
+        return (pow(ratio, 1.0 / PERCENT_ADD_EXPONENT) - 1.0) * 100.0
+    return panel_target - base
+
+def _read_spell_stat_panel_value(
+    mem: ProcessMemory,
+    stat_ptr: int,
+    stat_type: int,
+    ctx: StatCalcContext,
+) -> float:
+    calc_type = mem.read_u32(stat_ptr + off.STAT_CALCULATION_TYPE)
+    char_stat_type = _char_bonus_stat_type(stat_type)
+    if char_stat_type is not None:
+        base_value = mem.read_f32(stat_ptr + off.STAT_BASE_VALUE)
+        modifiers_ptr = mem.read_u64(stat_ptr + off.STAT_MODIFIERS)
+        spell_mod = sum_modifiers(mem, modifiers_ptr, ctx)
+        char_mod = _read_char_spell_mod_sum(mem, ctx, char_stat_type)
+        return calculate_display_value(base_value, spell_mod + char_mod, calc_type)
+    display_type = infer_spell_stat_display_type(stat_type, calc_type)
+    return read_stat_display_value(mem, stat_ptr, ctx, display_type=display_type)
+
+def _write_spell_stat_panel_value(
+    mem: ProcessMemory,
+    stat_ptr: int,
+    stat_type: int,
+    panel_value: float,
+    ctx: StatCalcContext,
+) -> bool:
+    calc_type = mem.read_u32(stat_ptr + off.STAT_CALCULATION_TYPE)
+    char_stat_type = _char_bonus_stat_type(stat_type)
+    if char_stat_type is not None:
+        base_value = mem.read_f32(stat_ptr + off.STAT_BASE_VALUE)
+        char_mod = _read_char_spell_mod_sum(mem, ctx, char_stat_type)
+        combined_mod = _combined_mod_sum_for_panel(base_value, panel_value, calc_type)
+        spell_mod_target = combined_mod - char_mod
+        if calc_type == STAT_CALC_FLAT:
+            return write_flat_panel_value(mem, stat_ptr, base_value + spell_mod_target, ctx)
+        return write_modifier_sum_panel_value(mem, stat_ptr, spell_mod_target, ctx, exclude_hidden=True)
+    display_type = infer_spell_stat_display_type(stat_type, calc_type)
+    return write_stat_panel_value(mem, stat_ptr, panel_value, ctx, display_type=display_type)
 
 def _iter_dict_int_object_entries(mem: ProcessMemory, dict_ptr: int):
     if not is_user_ptr(dict_ptr):
@@ -115,9 +204,7 @@ def read_spell_stats(
         stat_ptr = find_stat_by_type(mem, handle.stats_list_ptr, field.stat_type)
         if not stat_ptr:
             continue
-        calc_type = mem.read_u32(stat_ptr + off.STAT_CALCULATION_TYPE)
-        display_type = infer_spell_stat_display_type(field.stat_type, calc_type)
-        value = read_stat_display_value(mem, stat_ptr, ctx, display_type=display_type)
+        value = _read_spell_stat_panel_value(mem, stat_ptr, field.stat_type, ctx)
         values[field.key] = value
     return values
 
@@ -136,9 +223,7 @@ def write_spell_stat(
         stat_ptr = find_stat_by_type(mem, handle.stats_list_ptr, field.stat_type)
         if not stat_ptr:
             return False
-        calc_type = mem.read_u32(stat_ptr + off.STAT_CALCULATION_TYPE)
-        display_type = infer_spell_stat_display_type(field.stat_type, calc_type)
-        return write_stat_panel_value(mem, stat_ptr, value, ctx, display_type=display_type)
+        return _write_spell_stat_panel_value(mem, stat_ptr, field.stat_type, value, ctx)
     return False
 
 def spell_stat_ptr(mem: ProcessMemory, player_stats_ptr: int, spell_id: int, stat_type: int) -> int:

@@ -1,10 +1,11 @@
-from PySide6.QtCore import QEvent, Qt, Signal
+from PySide6.QtCore import QEvent, Qt, QTimer, Signal
 from PySide6.QtWidgets import (
-    QApplication, QCheckBox, QDoubleSpinBox, QFrame, QGridLayout, QHBoxLayout, QLabel,
-    QPushButton, QScrollArea, QSizePolicy, QTabWidget, QVBoxLayout, QWidget,
+    QApplication, QCheckBox, QDoubleSpinBox, QFrame, QGridLayout, QHBoxLayout, QInputDialog, QLabel,
+    QListWidget, QListWidgetItem, QMessageBox, QPushButton, QScrollArea, QSizePolicy, QTabWidget, QVBoxLayout,
+    QWidget,
 )
 from lab.trainer.stats_meta import BASIC_STATS, HIDDEN_STATS
-from ui.i18n import get_language, stat_label, trainer_tab_label, tr
+from ui.i18n import stat_label, trainer_tab_label, tr
 from ui.view_models.trainer_vm import TrainerViewModel
 
 class TrainerCommitSpinBox(QDoubleSpinBox):
@@ -55,6 +56,14 @@ class TrainerPanel(QWidget):
         self._spell_label_keys: dict[tuple[int, str], str] = {}
         self._basic_section_title: QLabel | None = None
         self._hidden_section_title: QLabel | None = None
+        self._preset_section_title: QLabel | None = None
+        self._preset_list: QListWidget | None = None
+        self._preset_empty_hint: QLabel | None = None
+        self._preset_apply_btn: QPushButton | None = None
+        self._preset_save_btn: QPushButton | None = None
+        self._preset_default_btn: QPushButton | None = None
+        self._preset_rename_btn: QPushButton | None = None
+        self._preset_delete_btn: QPushButton | None = None
         root = QVBoxLayout(self)
         root.setContentsMargins(20, 16, 20, 16)
         root.setSpacing(12)
@@ -150,12 +159,68 @@ class TrainerPanel(QWidget):
         row.setSpacing(0)
         left_col, basic_spins, basic_labels, self._basic_section_title = self._make_stats_column(BASIC_STATS, 'basic')
         right_col, hidden_spins, hidden_labels, self._hidden_section_title = self._make_stats_column(HIDDEN_STATS, 'hidden')
-        divider = self._make_column_divider(body)
+        preset_col = self._make_preset_column(body)
+        divider_left = self._make_column_divider(body)
+        divider_right = self._make_column_divider(body)
         row.addWidget(left_col, 0, Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
-        row.addWidget(divider, 0)
+        row.addWidget(divider_left, 0)
         row.addWidget(right_col, 0, Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+        row.addWidget(divider_right, 0)
+        row.addWidget(preset_col, 0, Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
         row.addStretch(1)
         return body, basic_spins, basic_labels, hidden_spins, hidden_labels
+
+    def _make_preset_column(self, parent: QWidget) -> QWidget:
+        column = QWidget(parent)
+        column.setAutoFillBackground(False)
+        column.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
+        column.setFixedWidth(220)
+        column_layout = QVBoxLayout(column)
+        column_layout.setContentsMargins(0, 0, 0, 0)
+        column_layout.setSpacing(8)
+        self._preset_section_title = QLabel(column)
+        self._preset_section_title.setObjectName('sectionTitle')
+        column_layout.addWidget(self._preset_section_title)
+        self._preset_list = QListWidget(column)
+        self._preset_list.setObjectName('trainerPresetList')
+        self._preset_list.setMinimumHeight(180)
+        self._preset_list.itemSelectionChanged.connect(self._update_preset_actions)
+        self._preset_list.itemDoubleClicked.connect(self._on_preset_apply_clicked)
+        column_layout.addWidget(self._preset_list, 1)
+        self._preset_empty_hint = QLabel(column)
+        self._preset_empty_hint.setObjectName('placeholderLabel')
+        self._preset_empty_hint.setWordWrap(True)
+        column_layout.addWidget(self._preset_empty_hint)
+        action_row_top = QHBoxLayout()
+        action_row_top.setSpacing(8)
+        self._preset_apply_btn = QPushButton(column)
+        self._preset_apply_btn.setObjectName('trainerPresetApplyBtn')
+        self._preset_save_btn = QPushButton(column)
+        self._preset_save_btn.setObjectName('secondaryBtn')
+        self._preset_apply_btn.clicked.connect(self._on_preset_apply_clicked)
+        self._preset_save_btn.clicked.connect(self._on_preset_save_clicked)
+        action_row_top.addWidget(self._preset_apply_btn)
+        action_row_top.addWidget(self._preset_save_btn)
+        column_layout.addLayout(action_row_top)
+        action_row_bottom = QHBoxLayout()
+        action_row_bottom.setSpacing(8)
+        self._preset_default_btn = QPushButton(column)
+        self._preset_default_btn.setObjectName('secondaryBtn')
+        action_row_bottom.addWidget(self._preset_default_btn)
+        column_layout.addLayout(action_row_bottom)
+        action_row_manage = QHBoxLayout()
+        action_row_manage.setSpacing(8)
+        self._preset_rename_btn = QPushButton(column)
+        self._preset_rename_btn.setObjectName('secondaryBtn')
+        self._preset_delete_btn = QPushButton(column)
+        self._preset_delete_btn.setObjectName('secondaryBtn')
+        self._preset_default_btn.clicked.connect(self._on_preset_default_clicked)
+        self._preset_rename_btn.clicked.connect(self._on_preset_rename_clicked)
+        self._preset_delete_btn.clicked.connect(self._on_preset_delete_clicked)
+        action_row_manage.addWidget(self._preset_rename_btn)
+        action_row_manage.addWidget(self._preset_delete_btn)
+        column_layout.addLayout(action_row_manage)
+        return column
 
     def _make_stats_column(
         self,
@@ -321,6 +386,19 @@ class TrainerPanel(QWidget):
         for (spell_id, key), label in self._spell_labels.items():
             label_key = self._spell_label_keys.get((spell_id, key), key)
             label.setText(stat_label(label_key))
+        if self._preset_section_title is not None:
+            self._preset_section_title.setText(tr('trainer.tab.presets'))
+        if self._preset_empty_hint is not None:
+            self._preset_empty_hint.setText(tr('trainer.preset.empty_hint'))
+        if self._preset_apply_btn is not None:
+            self._preset_apply_btn.setText(tr('trainer.preset.apply'))
+        if self._preset_save_btn is not None:
+            self._preset_save_btn.setText(tr('trainer.preset.save_as'))
+        if self._preset_rename_btn is not None:
+            self._preset_rename_btn.setText(tr('trainer.preset.rename'))
+        if self._preset_delete_btn is not None:
+            self._preset_delete_btn.setText(tr('trainer.preset.delete'))
+        self._refresh_preset_list()
 
     def eventFilter(self, obj, event):
         if event.type() == QEvent.Type.MouseButtonPress:
@@ -358,7 +436,9 @@ class TrainerPanel(QWidget):
         view_model.spells_changed.connect(self._on_spells_changed)
         view_model.attach_succeeded.connect(self._on_attach_state_changed)
         view_model.attach_failed.connect(self._on_attach_state_changed)
+        view_model.presets_changed.connect(self._refresh_preset_list)
         self.set_attached_ui(view_model.attached)
+        self._refresh_preset_list()
 
     def set_attached_ui(self, attached: bool) -> None:
         self._start_btn.setEnabled(not attached)
@@ -369,6 +449,7 @@ class TrainerPanel(QWidget):
             self._start_btn.setObjectName('trainerStartBtn')
         self._start_btn.style().unpolish(self._start_btn)
         self._start_btn.style().polish(self._start_btn)
+        self._update_preset_actions()
 
     def _on_start_clicked(self) -> None:
         if self._vm is None or self._vm.attached:
@@ -430,3 +511,182 @@ class TrainerPanel(QWidget):
         if self._updating or self._vm is None:
             return
         self._vm.set_super_attack(checked)
+
+    def _selected_preset_id(self) -> str | None:
+        if self._preset_list is None:
+            return None
+        item = self._preset_list.currentItem()
+        if item is None:
+            return None
+        preset_id = item.data(Qt.ItemDataRole.UserRole)
+        return str(preset_id) if preset_id else None
+
+    def _capture_basic_stats(self) -> dict[str, float]:
+        stats: dict[str, float] = {}
+        for key, spin in self._basic_spins.items():
+            stats[key] = float(spin.value())
+        return stats
+
+    def _refresh_preset_list(self) -> None:
+        if self._vm is None or self._preset_list is None:
+            return
+        selected_id = self._selected_preset_id()
+        default_id = self._vm.preset_store.default_preset_id
+        self._preset_list.blockSignals(True)
+        self._preset_list.clear()
+        presets = self._vm.preset_store.list_presets()
+        restore_row = -1
+        for index, preset in enumerate(presets):
+            label = tr('trainer.preset.default_mark', name=preset.name) if preset.id == default_id else preset.name
+            item = QListWidgetItem(label)
+            item.setData(Qt.ItemDataRole.UserRole, preset.id)
+            self._preset_list.addItem(item)
+            if preset.id == selected_id:
+                restore_row = index
+        if restore_row >= 0:
+            self._preset_list.setCurrentRow(restore_row)
+        self._preset_list.blockSignals(False)
+        if self._preset_empty_hint is not None:
+            self._preset_empty_hint.setVisible(not presets)
+        self._update_preset_actions()
+
+    def _update_preset_actions(self) -> None:
+        selected_id = self._selected_preset_id()
+        attached = self._vm is not None and self._vm.attached
+        if self._preset_apply_btn is not None:
+            self._preset_apply_btn.setEnabled(selected_id is not None and attached)
+        if self._preset_save_btn is not None:
+            self._preset_save_btn.setEnabled(True)
+        if self._preset_rename_btn is not None:
+            self._preset_rename_btn.setEnabled(selected_id is not None)
+        if self._preset_delete_btn is not None:
+            self._preset_delete_btn.setEnabled(selected_id is not None)
+        if self._preset_default_btn is not None:
+            is_default = selected_id is not None and self._vm is not None and selected_id == self._vm.preset_store.default_preset_id
+            self._preset_default_btn.setEnabled(selected_id is not None)
+            self._preset_default_btn.setText(tr('trainer.preset.clear_default') if is_default else tr('trainer.preset.set_default'))
+
+    def _on_preset_apply_clicked(self, *_args) -> None:
+        if self._vm is None or not self._vm.attached:
+            return
+        preset_id = self._selected_preset_id()
+        if preset_id is None:
+            return
+        self._vm.apply_preset(preset_id)
+        self._flash_preset_apply_btn()
+
+    def _flash_preset_apply_btn(self) -> None:
+        btn = self._preset_apply_btn
+        if btn is None:
+            return
+        btn.setObjectName('trainerPresetApplyBtnFlash')
+        btn.style().unpolish(btn)
+        btn.style().polish(btn)
+        QTimer.singleShot(380, self._restore_preset_apply_btn_style)
+
+    def _restore_preset_apply_btn_style(self) -> None:
+        btn = self._preset_apply_btn
+        if btn is None:
+            return
+        btn.setObjectName('trainerPresetApplyBtn')
+        btn.style().unpolish(btn)
+        btn.style().polish(btn)
+
+    def _on_preset_save_clicked(self) -> None:
+        if self._vm is None:
+            return
+        stats = self._capture_basic_stats()
+        name, ok = QInputDialog.getText(self, tr('trainer.preset.save_dialog_title'), tr('trainer.preset.save_dialog_label'))
+        if not ok:
+            return
+        trimmed = name.strip()
+        if not trimmed:
+            QMessageBox.warning(self, tr('trainer.preset.dialog_title'), tr('trainer.preset.error.empty_name'))
+            return
+        existing = self._vm.preset_store.find_by_name(trimmed)
+        if existing is not None:
+            answer = QMessageBox.question(
+                self,
+                tr('trainer.preset.dialog_title'),
+                tr('trainer.preset.confirm_overwrite', name=trimmed),
+            )
+            if answer != QMessageBox.StandardButton.Yes:
+                return
+            try:
+                self._vm.save_preset(trimmed, stats, preset_id=existing.id)
+            except ValueError:
+                QMessageBox.warning(self, tr('trainer.preset.dialog_title'), tr('trainer.preset.error.name_too_long'))
+                return
+            self._refresh_preset_list()
+            return
+        try:
+            preset = self._vm.save_preset(trimmed, stats)
+        except ValueError as exc:
+            message = tr('trainer.preset.error.name_too_long') if str(exc) == 'name_too_long' else tr('trainer.preset.error.empty_name')
+            QMessageBox.warning(self, tr('trainer.preset.dialog_title'), message)
+            return
+        if self._preset_list is not None:
+            for row in range(self._preset_list.count()):
+                item = self._preset_list.item(row)
+                if item is not None and item.data(Qt.ItemDataRole.UserRole) == preset.id:
+                    self._preset_list.setCurrentRow(row)
+                    break
+
+    def _on_preset_default_clicked(self) -> None:
+        if self._vm is None:
+            return
+        preset_id = self._selected_preset_id()
+        if preset_id is None:
+            return
+        if preset_id == self._vm.preset_store.default_preset_id:
+            self._vm.set_default_preset(None)
+        else:
+            self._vm.set_default_preset(preset_id)
+
+    def _on_preset_rename_clicked(self) -> None:
+        if self._vm is None:
+            return
+        preset_id = self._selected_preset_id()
+        if preset_id is None:
+            return
+        preset = self._vm.preset_store.get_preset(preset_id)
+        if preset is None:
+            return
+        name, ok = QInputDialog.getText(
+            self,
+            tr('trainer.preset.rename_dialog_title'),
+            tr('trainer.preset.save_dialog_label'),
+            text=preset.name,
+        )
+        if not ok:
+            return
+        trimmed = name.strip()
+        if not trimmed:
+            QMessageBox.warning(self, tr('trainer.preset.dialog_title'), tr('trainer.preset.error.empty_name'))
+            return
+        try:
+            self._vm.rename_preset(preset_id, trimmed)
+        except ValueError as exc:
+            if str(exc) == 'duplicate_name':
+                QMessageBox.warning(self, tr('trainer.preset.dialog_title'), tr('trainer.preset.error.duplicate_name'))
+            elif str(exc) == 'name_too_long':
+                QMessageBox.warning(self, tr('trainer.preset.dialog_title'), tr('trainer.preset.error.name_too_long'))
+            else:
+                QMessageBox.warning(self, tr('trainer.preset.dialog_title'), tr('trainer.preset.error.empty_name'))
+            return
+
+    def _on_preset_delete_clicked(self) -> None:
+        if self._vm is None:
+            return
+        preset_id = self._selected_preset_id()
+        if preset_id is None:
+            return
+        preset = self._vm.preset_store.get_preset(preset_id)
+        if preset is None:
+            return
+        is_default = preset_id == self._vm.preset_store.default_preset_id
+        message = tr('trainer.preset.confirm_delete_default', name=preset.name) if is_default else tr('trainer.preset.confirm_delete', name=preset.name)
+        answer = QMessageBox.question(self, tr('trainer.preset.dialog_title'), message)
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+        self._vm.delete_preset(preset_id)
