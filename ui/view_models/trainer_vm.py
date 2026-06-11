@@ -89,8 +89,6 @@ class TrainerViewModel(QObject):
             self._emit_snapshot()
         except Exception as exc:
             self._fail('延迟刷新属性失败', exc)
-            return
-        self._apply_default_preset_if_any()
 
     def apply_stat(self, key: str, value: float, spell_id: int | None = None) -> None:
         if not self._session.attached:
@@ -158,14 +156,6 @@ class TrainerViewModel(QObject):
     def set_default_preset(self, preset_id: str | None) -> None:
         self._preset_store.set_default_preset(preset_id)
         self.presets_changed.emit()
-
-    def _apply_default_preset_if_any(self) -> None:
-        preset = self._preset_store.get_default_preset()
-        if preset is None:
-            return
-        from lab.trainer.diag import log
-        log(f'UI: 自动应用默认预设「{preset.name}」')
-        self.apply_basic_stats(preset.stats)
 
     @Slot(bool)
     def set_invincible_mode(self, enabled: bool) -> None:

@@ -1,4 +1,4 @@
-# 咒语旅团 `The Spell Brigade` 修改器 v0.2.1
+# 咒语旅团 `The Spell Brigade` 修改器 v0.2.2
 
 [中文](README.md) · [English](docs/README.en.md)
 

@@ -63,7 +63,8 @@ class TrainerPanel(QWidget):
         self._preset_apply_btn: QPushButton | None = None
         self._preset_preview_btn: QPushButton | None = None
         self._preset_save_btn: QPushButton | None = None
-        self._preset_default_btn: QPushButton | None = None
+        self._preset_set_default_btn: QPushButton | None = None
+        self._preset_clear_default_btn: QPushButton | None = None
         self._preset_rename_btn: QPushButton | None = None
         self._preset_delete_btn: QPushButton | None = None
         root = QVBoxLayout(self)
@@ -213,9 +214,14 @@ class TrainerPanel(QWidget):
         column_layout.addLayout(action_row_save)
         action_row_bottom = QHBoxLayout()
         action_row_bottom.setSpacing(8)
-        self._preset_default_btn = QPushButton(column)
-        self._preset_default_btn.setObjectName('trainerPresetSecondaryBtn')
-        action_row_bottom.addWidget(self._preset_default_btn)
+        self._preset_set_default_btn = QPushButton(column)
+        self._preset_set_default_btn.setObjectName('trainerPresetSecondaryBtn')
+        self._preset_clear_default_btn = QPushButton(column)
+        self._preset_clear_default_btn.setObjectName('trainerPresetSecondaryBtn')
+        self._preset_set_default_btn.clicked.connect(self._on_preset_set_default_clicked)
+        self._preset_clear_default_btn.clicked.connect(self._on_preset_clear_default_clicked)
+        action_row_bottom.addWidget(self._preset_set_default_btn)
+        action_row_bottom.addWidget(self._preset_clear_default_btn)
         column_layout.addLayout(action_row_bottom)
         action_row_manage = QHBoxLayout()
         action_row_manage.setSpacing(8)
@@ -223,7 +229,6 @@ class TrainerPanel(QWidget):
         self._preset_rename_btn.setObjectName('trainerPresetSecondaryBtn')
         self._preset_delete_btn = QPushButton(column)
         self._preset_delete_btn.setObjectName('trainerPresetSecondaryBtn')
-        self._preset_default_btn.clicked.connect(self._on_preset_default_clicked)
         self._preset_rename_btn.clicked.connect(self._on_preset_rename_clicked)
         self._preset_delete_btn.clicked.connect(self._on_preset_delete_clicked)
         action_row_manage.addWidget(self._preset_rename_btn)
@@ -408,6 +413,10 @@ class TrainerPanel(QWidget):
             self._preset_apply_btn.setText(tr('trainer.preset.apply'))
         if self._preset_save_btn is not None:
             self._preset_save_btn.setText(tr('trainer.preset.save_as'))
+        if self._preset_set_default_btn is not None:
+            self._preset_set_default_btn.setText(tr('trainer.preset.set_default'))
+        if self._preset_clear_default_btn is not None:
+            self._preset_clear_default_btn.setText(tr('trainer.preset.clear_default'))
         if self._preset_rename_btn is not None:
             self._preset_rename_btn.setText(tr('trainer.preset.rename'))
         if self._preset_delete_btn is not None:
@@ -606,10 +615,12 @@ class TrainerPanel(QWidget):
             self._preset_rename_btn.setEnabled(selected_id is not None)
         if self._preset_delete_btn is not None:
             self._preset_delete_btn.setEnabled(selected_id is not None)
-        if self._preset_default_btn is not None:
-            is_default = selected_id is not None and self._vm is not None and selected_id == self._vm.preset_store.default_preset_id
-            self._preset_default_btn.setEnabled(selected_id is not None)
-            self._preset_default_btn.setText(tr('trainer.preset.clear_default') if is_default else tr('trainer.preset.set_default'))
+        default_id = self._vm.preset_store.default_preset_id if self._vm is not None else None
+        if self._preset_set_default_btn is not None:
+            is_default = selected_id is not None and default_id is not None and selected_id == default_id
+            self._preset_set_default_btn.setEnabled(selected_id is not None and not is_default)
+        if self._preset_clear_default_btn is not None:
+            self._preset_clear_default_btn.setEnabled(default_id is not None)
 
     def _clear_tab_spin_focus(self) -> None:
         for spin in list(self._basic_spins.values()) + list(self._hidden_spins.values()):
@@ -706,16 +717,20 @@ class TrainerPanel(QWidget):
                     self._preset_list.setCurrentRow(row)
                     break
 
-    def _on_preset_default_clicked(self) -> None:
+    def _on_preset_set_default_clicked(self) -> None:
         if self._vm is None:
             return
         preset_id = self._selected_preset_id()
         if preset_id is None:
             return
-        if preset_id == self._vm.preset_store.default_preset_id:
-            self._vm.set_default_preset(None)
-        else:
-            self._vm.set_default_preset(preset_id)
+        self._vm.set_default_preset(preset_id)
+
+    def _on_preset_clear_default_clicked(self) -> None:
+        if self._vm is None:
+            return
+        if self._vm.preset_store.default_preset_id is None:
+            return
+        self._vm.set_default_preset(None)
 
     def _on_preset_rename_clicked(self) -> None:
         if self._vm is None:
