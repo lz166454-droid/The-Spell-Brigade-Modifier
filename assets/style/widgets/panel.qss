@@ -77,3 +77,14 @@ QLabel#slotGoldActive {
     min-height: 32px;
     max-height: 34px;
 }
+
+QFrame#trainerHeaderDivider {
+    background: {{border_subtle}};
+    border: none;
+    min-width: 1px;
+    max-width: 1px;
+    min-height: 18px;
+    max-height: 22px;
+    margin-left: 4px;
+    margin-right: 4px;
+}

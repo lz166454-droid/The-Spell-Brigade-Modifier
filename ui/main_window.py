@@ -45,11 +45,6 @@ class MainWindow(FramelessWindow):
         self._apply_btn = QPushButton(toolbar)
         self._apply_btn.setObjectName('primaryBtn')
         self._apply_btn.setEnabled(False)
-        self._trainer_start_btn = QPushButton(toolbar)
-        self._trainer_start_btn.setObjectName('trainerStartBtn')
-        self._trainer_refresh_btn = QPushButton(toolbar)
-        self._trainer_refresh_btn.setObjectName('secondaryBtn')
-        self._trainer_refresh_btn.setEnabled(False)
         self._language = ToolbarComboBox(toolbar)
         self._language.setObjectName('toolbarCombo')
         self._language.setFixedHeight(24)
@@ -59,8 +54,6 @@ class MainWindow(FramelessWindow):
         toolbar_layout.addWidget(self._language)
         toolbar_layout.addWidget(self._reload_btn)
         toolbar_layout.addWidget(self._apply_btn)
-        toolbar_layout.addWidget(self._trainer_start_btn)
-        toolbar_layout.addWidget(self._trainer_refresh_btn)
         body = QHBoxLayout()
         body.setContentsMargins(0, 0, 0, 0)
         body.setSpacing(0)
@@ -114,8 +107,6 @@ class MainWindow(FramelessWindow):
     def retranslate_ui(self) -> None:
         self._reload_btn.setText(tr('toolbar.reload'))
         self._apply_btn.setText(tr('toolbar.apply'))
-        self._trainer_start_btn.setText(tr('toolbar.start_trainer'))
-        self._trainer_refresh_btn.setText(tr('toolbar.refresh_trainer'))
         self._refresh_language_combo()
         self._sidebar.retranslate_ui()
         self._overview.retranslate_ui()
@@ -160,8 +151,6 @@ class MainWindow(FramelessWindow):
         self._sidebar.page_switched.connect(self._switch_page)
         self._reload_btn.clicked.connect(self._on_reload)
         self._apply_btn.clicked.connect(self._on_apply)
-        self._trainer_start_btn.clicked.connect(self._on_trainer_start)
-        self._trainer_refresh_btn.clicked.connect(self._on_trainer_refresh)
         self._vm.data_ready.connect(self._refresh_panels)
         self._vm.load_failed.connect(self._on_load_failed)
         self._vm.apply_failed.connect(self._on_apply_failed)
@@ -242,30 +231,12 @@ class MainWindow(FramelessWindow):
     def _on_modify_failed(self, message: str) -> None:
         QMessageBox.warning(self, tr('msg.modify_failed'), message)
 
-    def _on_trainer_start(self) -> None:
-        if self._trainer_vm.attached:
-            return
-        self._trainer_start_btn.setEnabled(False)
-        self._trainer_refresh_btn.setEnabled(False)
-        self._trainer_vm.attach()
-
-    def _on_trainer_refresh(self) -> None:
-        if not self._trainer_vm.attached:
-            return
-        self._trainer_refresh_btn.setEnabled(False)
-        self._trainer_vm.reattach()
-
     def _set_trainer_attached_ui(self, attached: bool) -> None:
-        self._trainer_start_btn.setEnabled(not attached)
-        self._trainer_refresh_btn.setEnabled(attached)
+        self._trainer.set_attached_ui(attached)
         if attached:
-            self._trainer_start_btn.setObjectName('trainerStartBtnActive')
             self._trainer_status.setText(tr('status.trainer_active'))
         else:
-            self._trainer_start_btn.setObjectName('trainerStartBtn')
             self._trainer_status.setText(tr('status.trainer_idle'))
-        self._trainer_start_btn.style().unpolish(self._trainer_start_btn)
-        self._trainer_start_btn.style().polish(self._trainer_start_btn)
 
     def _on_trainer_started(self) -> None:
         self._set_trainer_attached_ui(True)

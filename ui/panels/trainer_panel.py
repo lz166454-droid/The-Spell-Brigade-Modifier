@@ -1,7 +1,7 @@
 from PySide6.QtCore import QEvent, Qt, Signal
 from PySide6.QtWidgets import (
     QApplication, QCheckBox, QDoubleSpinBox, QFrame, QGridLayout, QHBoxLayout, QLabel,
-    QScrollArea, QVBoxLayout, QWidget,
+    QPushButton, QScrollArea, QVBoxLayout, QWidget,
 )
 from lab.trainer.stats_meta import CHARACTER_STATS
 from ui.i18n import stat_label, tr
@@ -55,10 +55,26 @@ class TrainerPanel(QWidget):
         header_layout.setContentsMargins(16, 12, 16, 12)
         header_layout.setSpacing(8)
         option_row = QHBoxLayout()
+        option_row.setSpacing(8)
+        self._start_btn = QPushButton(header)
+        self._start_btn.setObjectName('trainerStartBtn')
+        self._refresh_btn = QPushButton(header)
+        self._refresh_btn.setObjectName('secondaryBtn')
+        self._refresh_btn.setEnabled(False)
+        self._start_btn.clicked.connect(self._on_start_clicked)
+        self._refresh_btn.clicked.connect(self._on_refresh_clicked)
+        divider = QFrame(header)
+        divider.setObjectName('trainerHeaderDivider')
+        divider.setFrameShape(QFrame.Shape.VLine)
+        divider.setFrameShadow(QFrame.Shadow.Plain)
+        divider.setFixedWidth(1)
         self._invincible_mode = QCheckBox(header)
         self._invincible_mode.toggled.connect(self._on_invincible_toggled)
         self._super_attack = QCheckBox(header)
         self._super_attack.toggled.connect(self._on_super_attack_toggled)
+        option_row.addWidget(self._start_btn)
+        option_row.addWidget(self._refresh_btn)
+        option_row.addWidget(divider)
         option_row.addWidget(self._invincible_mode)
         option_row.addWidget(self._super_attack)
         option_row.addStretch(1)
@@ -104,6 +120,8 @@ class TrainerPanel(QWidget):
         self.retranslate_ui()
 
     def retranslate_ui(self) -> None:
+        self._start_btn.setText(tr('toolbar.start_trainer'))
+        self._refresh_btn.setText(tr('toolbar.refresh_trainer'))
         self._invincible_mode.setText(tr('trainer.invincible'))
         self._super_attack.setText(tr('trainer.super_attack'))
         for key, label in self._stat_labels.items():
@@ -142,6 +160,37 @@ class TrainerPanel(QWidget):
     def bind(self, view_model: TrainerViewModel) -> None:
         self._vm = view_model
         view_model.stats_updated.connect(self._on_stats_updated)
+        view_model.attach_succeeded.connect(self._on_attach_state_changed)
+        view_model.attach_failed.connect(self._on_attach_state_changed)
+        self.set_attached_ui(view_model.attached)
+
+    def set_attached_ui(self, attached: bool) -> None:
+        self._start_btn.setEnabled(not attached)
+        self._refresh_btn.setEnabled(attached)
+        if attached:
+            self._start_btn.setObjectName('trainerStartBtnActive')
+        else:
+            self._start_btn.setObjectName('trainerStartBtn')
+        self._start_btn.style().unpolish(self._start_btn)
+        self._start_btn.style().polish(self._start_btn)
+
+    def _on_start_clicked(self) -> None:
+        if self._vm is None or self._vm.attached:
+            return
+        self._start_btn.setEnabled(False)
+        self._refresh_btn.setEnabled(False)
+        self._vm.attach()
+
+    def _on_refresh_clicked(self) -> None:
+        if self._vm is None or not self._vm.attached:
+            return
+        self._refresh_btn.setEnabled(False)
+        self._vm.reattach()
+
+    def _on_attach_state_changed(self) -> None:
+        if self._vm is None:
+            return
+        self.set_attached_ui(self._vm.attached)
 
     def _on_stats_updated(self, stats: dict) -> None:
         self._updating = True
